@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Chapéu de Cangaceiro (Cangaceiro Hat) - Stylized as an "X" -->
+    <path
+        android:fillColor="#FDB813"
+        android:pathData="M54,35 C40,35 30,45 30,55 L78,55 C78,45 68,35 54,35 Z" />
+    <path
+        android:fillColor="#B8860B"
+        android:pathData="M25,55 L83,55 C83,60 75,65 54,65 C33,65 25,60 25,55 Z" />
+
+    <!-- Decorative star -->
+    <path
+        android:fillColor="#C62828"
+        android:pathData="M54,40 L56,45 L61,45 L57,48 L58,53 L54,50 L50,53 L51,48 L47,45 L52,45 Z" />
+
+    <!-- Chuchu vegetable (Simplified) -->
+    <path
+        android:fillColor="#8BC34A"
+        android:pathData="M65,70 C70,70 75,75 75,83 C75,90 70,93 65,93 C60,93 55,90 55,83 C55,75 60,70 65,70 Z" />
+    <path
+        android:fillColor="#689F38"
+        android:pathData="M65,70 L65,67"
+        android:strokeWidth="1.5"
+        android:strokeColor="#689F38"
+        android:strokeLineCap="round" />
+</vector>
