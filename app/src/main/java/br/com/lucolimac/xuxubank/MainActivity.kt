@@ -43,8 +43,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun XuxuBankApp(userViewModel: UserViewModel, clientViewModel: ClientViewModel, debtViewModel: DebtViewModel) {
     val currentUser by userViewModel.currentUser.collectAsState()
+    val loginState by userViewModel.loginState.collectAsState()
     val backStack = rememberNavBackStack(NavRoute.Splash)
 
+    // Synchronize navigation with auth state
     LaunchedEffect(currentUser) {
         val currentRoute = backStack.lastOrNull()
         if (currentRoute == NavRoute.Splash) return@LaunchedEffect
@@ -52,7 +54,7 @@ fun XuxuBankApp(userViewModel: UserViewModel, clientViewModel: ClientViewModel, 
         if (currentUser == null && currentRoute != NavRoute.Login) {
             backStack.clear()
             backStack.add(NavRoute.Login)
-        } else if (currentUser != null && currentRoute == NavRoute.Login) {
+        } else if (currentUser != null && (currentRoute == NavRoute.Login || currentRoute == null)) {
             backStack.clear()
             backStack.add(NavRoute.Home)
         }
@@ -78,13 +80,15 @@ fun XuxuBankApp(userViewModel: UserViewModel, clientViewModel: ClientViewModel, 
                     }
                 }
                 NavRoute.Login -> NavEntry(key) {
-                    LoginScreen { role ->
-                        if (role == UserRole.MANAGER) {
-                            userViewModel.loginAsManager()
-                        } else {
-                            userViewModel.loginAsClient(1L, "Client")
+                    LoginScreen(
+                        loginState = loginState,
+                        onLogin = { identifier ->
+                            userViewModel.login(identifier)
+                        },
+                        onResetError = {
+                            userViewModel.resetLoginState()
                         }
-                    }
+                    )
                 }
                 NavRoute.Home -> NavEntry(key) {
                     currentUser?.let { user ->

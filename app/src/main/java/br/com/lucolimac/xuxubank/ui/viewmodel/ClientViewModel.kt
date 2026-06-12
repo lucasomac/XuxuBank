@@ -20,7 +20,7 @@ class ClientViewModel(private val manageClientUseCase: ManageClientUseCase) : Vi
     val allClients: StateFlow<List<ClientEntity>> = manageClientUseCase.getAllClients()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun saveClient(name: String, email: String?, phone: String?) {
+    fun saveClient(name: String, email: String, phone: String) {
         viewModelScope.launch {
             manageClientUseCase.createClient(name, email, phone)
         }

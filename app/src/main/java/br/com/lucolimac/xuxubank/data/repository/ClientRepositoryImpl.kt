@@ -10,6 +10,8 @@ class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository 
 
     override suspend fun getClientById(id: Long): ClientEntity? = clientDao.getClientById(id)
 
+    override suspend fun getClientByIdentifier(identifier: String): ClientEntity? = clientDao.getClientByIdentifier(identifier)
+
     override suspend fun saveClient(client: ClientEntity): Long = clientDao.insertClient(client)
 
     override suspend fun updateClient(client: ClientEntity) = clientDao.updateClient(client)

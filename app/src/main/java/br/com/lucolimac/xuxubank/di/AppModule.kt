@@ -29,7 +29,7 @@ val appModule = module {
                 androidContext(),
                 XuxuDatabase::class.java,
                 XuxuDatabase.DATABASE_NAME
-            ).fallbackToDestructiveMigration(false)
+            ).fallbackToDestructiveMigration(true)
             .build()
     }
 
@@ -44,7 +44,7 @@ val appModule = module {
     single<DebtRepository> { DebtRepositoryImpl(get()) }
 
     // Use Case factories
-    factory { ManageUserUseCase(get()) }
+    factory { ManageUserUseCase(get(), get()) }
     factory { ManageClientUseCase(get()) }
     factory { ManageDebtUseCase(get()) }
 

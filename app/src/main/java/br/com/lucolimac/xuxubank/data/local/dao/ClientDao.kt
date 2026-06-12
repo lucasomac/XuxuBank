@@ -12,6 +12,9 @@ interface ClientDao {
     @Query("SELECT * FROM clients WHERE id = :id")
     suspend fun getClientById(id: Long): ClientEntity?
 
+    @Query("SELECT * FROM clients WHERE email = :identifier OR phone = :identifier LIMIT 1")
+    suspend fun getClientByIdentifier(identifier: String): ClientEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertClient(client: ClientEntity): Long
 

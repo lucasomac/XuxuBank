@@ -1,31 +1,21 @@
-# Release Notes — XuxuBank v1.0.0 🌵💰
+# Release Notes — XuxuBank v1.1.0 🌵💰
 
-Esta é a versão inicial oficial do **XuxuBank**, consolidando uma arquitetura robusta, design regionalizado e funcionalidades completas de gestão financeira.
+Esta versão traz melhorias críticas na segurança, identificação de usuários e experiência de entrada.
 
 ## 🚀 O que há de novo
 
-### 🏗️ Arquitetura e Core
-- **Clean Architecture:** Implementação total com separação de camadas (*Data*, *Domain*, *UI*).
-- **MVVM:** Fluxo de dados reativo utilizando `StateFlow` e `ViewModel`.
-- **Koin 4.0.0:** Injeção de dependências configurada em todo o projeto.
-- **Room Database v2:** Migração realizada para suportar novas nomenclaturas e persistência de Clientes e Dívidas.
-- **Navegação 3:** Transições de tela baseadas em estado e chaves serializáveis.
+### 🔐 Sistema de Acesso Unificado
+- **Login Inteligente:** Removida a seleção manual de papéis. Agora o app identifica automaticamente se você é um **Gerente** ou um **Cliente** através do seu E-mail ou Telefone.
+- **Diferenciação Automática:** Clientes acessam diretamente sua visão restrita de dívidas, enquanto o Gerente acessa o painel administrativo.
 
-### 💸 Funcionalidades de Gestão
-- **Parcelamento Automático:** Geração inteligente de dívidas parceladas com cálculo sequencial de datas.
-- **Filtros de Status:** Dashboard mensal com filtragem dinâmica por *Pendente*, *Pago* e *Atrasado*.
-- **Controle de Acesso:** Login simulado diferenciando a experiência de Gerente (Administrativo) e Cliente (Visualização).
-- **Renomeação Estratégica:** Refatoração completa de toda a base de código e UI para o termo **"Cliente"** (antigo Devedor), visando um tom mais profissional.
+### 📋 Cadastro de Clientes Reforçado
+- **Campos Obrigatórios:** E-mail e Telefone agora são obrigatórios para todos os clientes, garantindo a integridade do sistema de login.
+- **Validação Estrita:** Implementada validação de formato de e-mail e máscaras de telefone para evitar erros de digitação.
 
-### 🎨 Visual e UX
-- **Tema Earthy:** Cores inspiradas no Nordeste brasileiro aplicadas via Material 3.
-- **Ícone Adaptativo:** Design exclusivo com Chapéu de Cangaceiro e Chuchu.
-- **Layout Adaptativo:** Suporte nativo a telas grandes (Tablets/Dobráveis) via *List-Detail Scene Strategy*.
-- **Localização:** 100% dos textos centralizados em `strings.xml` em Português (Brasil).
-
-### 🧪 Qualidade e Testes
-- **Infraestrutura de Testes:** Implementação de Fakes para repositórios e testes unitários para *UseCases* e *ViewModels*.
-- **Estabilidade:** Correção de bugs críticos em migrações de banco de dados e validações de campos numéricos.
+### ✨ Melhorias na Experiência do Usuário (UX)
+- **Máscara de Telefone:** Formatação automática no padrão `(XX) XXXXX-XXXX` durante a digitação.
+- **Feedback de Erro:** Mensagens visuais claras no formulário de login caso os dados sejam inválidos ou não encontrados.
+- **Teclado Contextual:** O app alterna automaticamente entre o teclado numérico e alfabético dependendo do que está sendo digitado.
 
 ---
-*XuxuBank v1.0.0 — Conectando tecnologia e cultura.*
+*XuxuBank v1.1.0 — Segurança e cultura nordestina em um só lugar.*

@@ -20,8 +20,8 @@
     <string name="client_registration">Cadastro de Cliente</string>
     <string name="edit_client">Editar Cliente</string>
     <string name="name">Nome</string>
-    <string name="email">E-mail (Opcional)</string>
-    <string name="phone">Telefone (Opcional)</string>
+    <string name="email">E-mail</string>
+    <string name="phone">Telefone</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
     <string name="delete">Excluir</string>
@@ -58,4 +58,8 @@
     <string name="total_pending">Total Pendente</string>
     <string name="filter_label">Filtro: %1$s</string>
     <string name="all">Todos</string>
+
+    <string name="client_login_instruction">Insira seu E-mail ou Telefone para acessar:</string>
+    <string name="login">Entrar</string>
+    <string name="client_not_found">Cliente não encontrado. Verifique os dados ou contate o gerente.</string>
 </resources>

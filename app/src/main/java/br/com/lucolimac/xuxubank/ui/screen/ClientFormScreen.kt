@@ -1,24 +1,36 @@
 package br.com.lucolimac.xuxubank.ui.screen
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.ui.util.PhoneVisualTransformation
+import br.com.lucolimac.xuxubank.ui.util.ValidationUtils
 
+/**
+ * Screen for creating or editing client information.
+ * All fields (Name, Email, Phone) are now mandatory for identification.
+ */
 @Composable
 fun ClientFormScreen(
     client: ClientEntity? = null,
-    onSave: (String, String?, String?) -> Unit,
+    onSave: (String, String, String) -> Unit,
     onCancel: () -> Unit,
     onDelete: (() -> Unit)? = null
 ) {
     var name by remember { mutableStateOf(client?.name ?: "") }
     var email by remember { mutableStateOf(client?.email ?: "") }
     var phone by remember { mutableStateOf(client?.phone ?: "") }
+
+    val isEmailValid = ValidationUtils.isValidEmail(email)
+    val isPhoneValid = ValidationUtils.isValidPhone(phone)
+    val isNameValid = ValidationUtils.isValidName(name)
 
     Column(
         modifier = Modifier
@@ -30,26 +42,39 @@ fun ClientFormScreen(
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
+        
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
             label = { Text(stringResource(R.string.name)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            isError = name.isNotBlank() && !isNameValid
         )
         Spacer(modifier = Modifier.height(8.dp))
+        
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            isError = email.isNotBlank() && !isEmailValid,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
         Spacer(modifier = Modifier.height(8.dp))
+        
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
             label = { Text(stringResource(R.string.phone)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            isError = phone.isNotBlank() && !isPhoneValid,
+            visualTransformation = PhoneVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
+        
         Spacer(modifier = Modifier.height(24.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -66,8 +91,9 @@ fun ClientFormScreen(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
-                onClick = { onSave(name, email.ifBlank { null }, phone.ifBlank { null }) },
-                enabled = name.isNotBlank()
+                onClick = { onSave(name, email, phone) },
+                // Validation: all fields must be valid
+                enabled = isNameValid && isEmailValid && isPhoneValid
             ) {
                 Text(stringResource(R.string.save))
             }
