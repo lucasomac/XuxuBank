@@ -2,13 +2,11 @@ package br.com.lucolimac.xuxubank.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkPrimary,
@@ -50,13 +48,26 @@ private val LightColorScheme = lightColorScheme(
     onBackground = LightOnBackground,
     surface = LightSurface,
     onSurface = LightOnSurface,
+    surfaceVariant = SurfaceContainerLow,
+    onSurfaceVariant = OnSurfaceDark,
+    outlineVariant = SurfaceContainerHigh
+)
+
+/**
+ * Custom shapes for "The Modern Sertão".
+ * Uses xl (24dp) for major containers to echo the "cangaceiro hat" arc.
+ */
+val XuxuShapes = Shapes(
+    small = RoundedCornerShape(8.dp),
+    medium = RoundedCornerShape(12.dp),
+    large = RoundedCornerShape(16.dp),
+    extraLarge = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp, bottomStart = 12.dp, bottomEnd = 12.dp)
 )
 
 @Composable
 fun XuxuBankTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false, // Set to false to force regional theme
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -64,7 +75,6 @@ fun XuxuBankTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -72,6 +82,7 @@ fun XuxuBankTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = XuxuShapes,
         content = content
     )
 }

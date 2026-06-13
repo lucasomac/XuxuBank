@@ -1,6 +1,5 @@
 package br.com.lucolimac.xuxubank.ui.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.ui.component.ClientItem
 
 @Composable
 fun ClientListScreen(
@@ -39,10 +39,9 @@ fun ClientListScreen(
                 modifier = Modifier.fillMaxSize().padding(innerPadding)
             ) {
                 items(clients) { client ->
-                    ListItem(
-                        headlineContent = { Text(client.name) },
-                        supportingContent = { Text(client.phone ?: client.email ?: "Sem info de contato") },
-                        modifier = Modifier.clickable { onClientClick(client) }
+                    ClientItem(
+                        client = client,
+                        onClick = { onClientClick(client) }
                     )
                 }
             }

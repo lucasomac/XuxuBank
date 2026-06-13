@@ -4,6 +4,17 @@ Este arquivo mantém o histórico de todas as atualizações e melhorias impleme
 
 ---
 
+## [1.2.0] — 2026-06-08
+### Adicionado
+- **Design System "Modern Sertão":** Implementação de uma nova identidade visual premium baseada no documento `docs/DESIGN.md`.
+- **Hierarquia de Superfícies:** Substituição de bordas físicas por variações tonais (`SurfaceContainer` tiers) para uma interface mais limpa e moderna.
+- **Tipografia Editorial:** Escala tipográfica de alto contraste para maior autoridade e legibilidade.
+- **Paleta de Cores Refinada:** Introdução do Vermelho Terra (`#A20513`) e Bege Light (`#FDF9F4`) para um visual "afetivo" e profissional.
+- **Geometria Curva:** Aplicação da curvatura inspirada no Chapéu de Cangaceiro (24dp) em containers e cabeçalhos.
+- **Componentes Refinados:** Atualização do `DebtItem` e `SummaryCard` para utilizar gradientes, profundidade tonal e zero bordas físicas.
+
+---
+
 ## [1.1.0] — 2026-06-08
 ### Adicionado
 - **Acesso Unificado:** Novo sistema de login que identifica automaticamente Gerente ou Cliente via E-mail/Telefone.
