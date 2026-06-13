@@ -7,12 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.util.Locale
 
 /**
  * Summary card using gradients and "Hat" motif (curved geometry).
+ * Enhanced with semantic descriptions for screen readers.
  */
 @Composable
 fun SummaryCard(
@@ -22,13 +25,18 @@ fun SummaryCard(
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary
 ) {
+    val formattedAmount = String.format(Locale.forLanguageTag("pt-BR"), "%,.2f", amount)
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = MaterialTheme.shapes.extraLarge, // 24dp top corners
+            .padding(vertical = 8.dp)
+            .semantics { 
+                contentDescription = "Resumo financeiro: $title. Valor total: $formattedAmount reais"
+            },
+        shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent, // Managed by gradient
+            containerColor = Color.Transparent,
             contentColor = contentColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -54,7 +62,7 @@ fun SummaryCard(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "R$ ${String.format(Locale.forLanguageTag("pt-BR"), "%,.2f", amount)}",
+                    text = "R$ $formattedAmount",
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Black,
                     color = contentColor

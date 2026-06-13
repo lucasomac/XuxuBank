@@ -10,16 +10,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
-import br.com.lucolimac.xuxubank.ui.component.DebtItem
 import br.com.lucolimac.xuxubank.ui.component.SummaryCard
+import br.com.lucolimac.xuxubank.ui.component.debt.DebtItem
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Monthly overview screen with a11y support and refined spacing.
+ */
 @Composable
 fun MonthlyOverviewScreen(
     debtViewModel: DebtViewModel
@@ -31,7 +37,7 @@ fun MonthlyOverviewScreen(
     val filteredDebts = if (filterStatus == null) debts else debts.filter { it.status == filterStatus }
     val totalReceivable = filteredDebts.sumOf { it.amount }
 
-    val sdf = SimpleDateFormat("MMMM yyyy", Locale("pt", "BR"))
+    val sdf = SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("pt-BR"))
 
     val groupedDebts = filteredDebts.sortedBy { it.dueDate ?: 0L }.groupBy {
         val cal = Calendar.getInstance()
@@ -48,7 +54,11 @@ fun MonthlyOverviewScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { contentDescription = "Tela de visão geral mensal de dívidas" }
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,11 +74,15 @@ fun MonthlyOverviewScreen(
             }
             Text(
                 text = stringResource(R.string.filter_label, statusDisplayName),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Box {
-                IconButton(onClick = { showFilterMenu = true }) {
-                    Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.all))
+                IconButton(
+                    onClick = { showFilterMenu = true },
+                    modifier = Modifier.size(48.dp) // Minimum touch target
+                ) {
+                    Icon(Icons.Default.FilterList, contentDescription = "Filtrar por status")
                 }
                 DropdownMenu(
                     expanded = showFilterMenu,
@@ -106,7 +120,11 @@ fun MonthlyOverviewScreen(
         ) {
             if (filteredDebts.isEmpty()) {
                 item {
-                    Text(text = stringResource(R.string.no_debts_recorded), style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        text = stringResource(R.string.no_debts_recorded),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 32.dp)
+                    )
                 }
             }
 
@@ -115,9 +133,10 @@ fun MonthlyOverviewScreen(
                     val header = if (monthMillis == 0L) stringResource(R.string.no_due_date_header) else sdf.format(Date(monthMillis))
                     Text(
                         text = header.replaceFirstChar { it.uppercase() },
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Black,
+                        modifier = Modifier.padding(vertical = 8.dp).semantics { heading() }
                     )
                 }
                 items(monthDebts) { debt ->

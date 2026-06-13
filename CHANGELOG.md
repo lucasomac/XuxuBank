@@ -4,6 +4,14 @@ Este arquivo mantém o histórico de todas as atualizações e melhorias impleme
 
 ---
 
+## [1.2.1] — 2026-06-12
+### Adicionado
+- **Mobile Design Standards:** Aperfeiçoamento da interface seguindo os padrões `/mobile-app-design`.
+- **Acessibilidade (a11y):** Inclusão de `contentDescription` em telas e componentes financeiros para suporte a leitores de tela.
+- **Otimização de Touch Targets:** Garantia de alvos de toque mínimos de 48dp em todos os elementos interativos.
+- **Validação de Entrada:** Filtros em tempo real para campos numéricos e melhorias nos tipos de teclado (numérico vs. e-mail).
+- **UX Refinada:** Melhorias no espaçamento (spacing system) e feedback visual em formulários.
+
 ## [1.2.0] — 2026-06-08
 ### Adicionado
 - **Design System "Modern Sertão":** Implementação de uma nova identidade visual premium baseada no documento `docs/DESIGN.md`.

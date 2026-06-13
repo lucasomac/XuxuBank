@@ -6,13 +6,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.platform.LocalLocale
 
+/**
+ * Screen for creating or editing debt information following Mobile Design Standards.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DebtFormScreen(
@@ -29,51 +35,64 @@ fun DebtFormScreen(
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = debt?.dueDate ?: System.currentTimeMillis())
     var showDatePicker by remember { mutableStateOf(false) }
 
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", LocalLocale.current.platformLocale)
     val dateDisplay = datePickerState.selectedDateMillis?.let { dateFormatter.format(Date(it)) } ?: stringResource(R.string.no_date)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(24.dp)
+            .semantics { contentDescription = "Formulário de lançamento de dívida" }
     ) {
         Text(
             text = if (debt == null) stringResource(R.string.new_debt_for, clientName) else stringResource(R.string.edit_debt_for, clientName),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = description,
             onValueChange = { description = it },
             label = { Text(stringResource(R.string.description)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            placeholder = { Text("Ex: Compra de materiais") }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
             value = amount,
-            onValueChange = { amount = it },
+            onValueChange = { newValue ->
+                // Basic validation: permit only digits and one dot
+                if (newValue.isEmpty() || newValue.matches(Regex("""^\d*\.?\d*$"""))) {
+                    amount = newValue
+                }
+            },
             label = { Text(stringResource(R.string.amount)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            prefix = { Text("R$ ") },
+            singleLine = true
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         if (debt == null) {
             OutlinedTextField(
                 value = installments,
-                onValueChange = { installments = it },
+                onValueChange = { installments = it.filter { char -> char.isDigit() } },
                 label = { Text(stringResource(R.string.installments)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
         OutlinedButton(
             onClick = { showDatePicker = true },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+            shape = MaterialTheme.shapes.medium
         ) {
             Text(text = stringResource(R.string.due_date, dateDisplay))
         }
@@ -83,7 +102,7 @@ fun DebtFormScreen(
                 onDismissRequest = { showDatePicker = false },
                 confirmButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("OK")
+                        Text("Confirmar")
                     }
                 }
             ) {
@@ -91,16 +110,20 @@ fun DebtFormScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            TextButton(onClick = onCancel) {
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.weight(1f).height(56.dp),
+                shape = MaterialTheme.shapes.large
+            ) {
                 Text(stringResource(R.string.cancel))
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            
             Button(
                 onClick = {
                     onSave(
@@ -111,7 +134,9 @@ fun DebtFormScreen(
                         installments.toIntOrNull() ?: 1
                     )
                 },
-                enabled = description.isNotBlank() && amount.toDoubleOrNull() != null
+                modifier = Modifier.weight(1f).height(56.dp),
+                enabled = description.isNotBlank() && amount.toDoubleOrNull() != null,
+                shape = MaterialTheme.shapes.large
             ) {
                 Text(if (debt == null) stringResource(R.string.save_debt) else stringResource(R.string.update_debt))
             }

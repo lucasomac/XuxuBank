@@ -2,10 +2,14 @@ package br.com.lucolimac.xuxubank.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
@@ -14,8 +18,8 @@ import br.com.lucolimac.xuxubank.ui.util.PhoneVisualTransformation
 import br.com.lucolimac.xuxubank.ui.util.ValidationUtils
 
 /**
- * Screen for creating or editing client information.
- * All fields (Name, Email, Phone) are now mandatory for identification.
+ * Screen for creating or editing client information following Mobile Design Standards.
+ * Features mandatory fields, real-time validation feedback, and optimized touch targets.
  */
 @Composable
 fun ClientFormScreen(
@@ -35,13 +39,15 @@ fun ClientFormScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(24.dp)
+            .semantics { contentDescription = "Formulário de cadastro de cliente" }
     ) {
         Text(
             text = if (client == null) stringResource(R.string.client_registration) else stringResource(R.string.edit_client),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         
         OutlinedTextField(
             value = name,
@@ -49,9 +55,14 @@ fun ClientFormScreen(
             label = { Text(stringResource(R.string.name)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            isError = name.isNotBlank() && !isNameValid
+            isError = name.isNotBlank() && !isNameValid,
+            supportingText = {
+                if (name.isNotBlank() && !isNameValid) {
+                    Text("Nome inválido")
+                }
+            }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         
         OutlinedTextField(
             value = email,
@@ -60,9 +71,14 @@ fun ClientFormScreen(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             isError = email.isNotBlank() && !isEmailValid,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            supportingText = {
+                if (email.isNotBlank() && !isEmailValid) {
+                    Text("E-mail inválido")
+                }
+            }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         
         OutlinedTextField(
             value = phone,
@@ -72,28 +88,46 @@ fun ClientFormScreen(
             singleLine = true,
             isError = phone.isNotBlank() && !isPhoneValid,
             visualTransformation = PhoneVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = {
+                if (phone.isNotBlank() && !isPhoneValid) {
+                    Text("Telefone incompleto (DDD + 9 dígitos)")
+                }
+            }
         )
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.weight(1f))
+        
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (client != null && onDelete != null) {
-                TextButton(onClick = onDelete, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)) {
-                    Text(stringResource(R.string.delete))
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
-                Spacer(modifier = Modifier.weight(1f))
             }
-            TextButton(onClick = onCancel) {
+            
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.weight(1f).height(56.dp),
+                shape = MaterialTheme.shapes.large
+            ) {
                 Text(stringResource(R.string.cancel))
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            
             Button(
                 onClick = { onSave(name, email, phone) },
-                // Validation: all fields must be valid
-                enabled = isNameValid && isEmailValid && isPhoneValid
+                modifier = Modifier.weight(1f).height(56.dp),
+                enabled = isNameValid && isEmailValid && isPhoneValid,
+                shape = MaterialTheme.shapes.large
             ) {
                 Text(stringResource(R.string.save))
             }
