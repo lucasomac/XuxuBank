@@ -35,12 +35,14 @@ fun ClientFormScreen(
     val isEmailValid = ValidationUtils.isValidEmail(email)
     val isPhoneValid = ValidationUtils.isValidPhone(phone)
     val isNameValid = ValidationUtils.isValidName(name)
+    
+    val clientFormA11y = stringResource(R.string.client_form_a11y)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .semantics { contentDescription = "Formulário de cadastro de cliente" }
+            .semantics { contentDescription = clientFormA11y }
     ) {
         Text(
             text = if (client == null) stringResource(R.string.client_registration) else stringResource(R.string.edit_client),
@@ -58,7 +60,7 @@ fun ClientFormScreen(
             isError = name.isNotBlank() && !isNameValid,
             supportingText = {
                 if (name.isNotBlank() && !isNameValid) {
-                    Text("Nome inválido")
+                    Text(stringResource(R.string.invalid_name))
                 }
             }
         )
@@ -74,7 +76,7 @@ fun ClientFormScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             supportingText = {
                 if (email.isNotBlank() && !isEmailValid) {
-                    Text("E-mail inválido")
+                    Text(stringResource(R.string.invalid_email))
                 }
             }
         )
@@ -91,7 +93,7 @@ fun ClientFormScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             supportingText = {
                 if (phone.isNotBlank() && !isPhoneValid) {
-                    Text("Telefone incompleto (DDD + 9 dígitos)")
+                    Text(stringResource(R.string.invalid_phone))
                 }
             }
         )

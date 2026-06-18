@@ -16,6 +16,7 @@ import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
 import br.com.lucolimac.xuxubank.ui.theme.SurfaceContainerLowest
+import br.com.lucolimac.xuxubank.ui.util.FormatUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,14 +30,13 @@ fun DebtItem(
     onDelete: (() -> Unit)? = null,
     onEdit: (() -> Unit)? = null
 ) {
-    // Surface Container Lowest provides a subtle "lift" against the beige background
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
             containerColor = SurfaceContainerLowest
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp) // Tonal depth over shadows
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(
@@ -88,7 +88,7 @@ fun DebtItem(
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Text(
-                        text = "R$ ${String.format(Locale.forLanguageTag("pt-BR"), "%,.2f", debt.amount)}",
+                        text = FormatUtils.formatMonetary(debt.amount),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -98,12 +98,12 @@ fun DebtItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (onEdit != null) {
                         IconButton(onClick = onEdit) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit Debt", tint = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit_client), tint = MaterialTheme.colorScheme.primary)
                         }
                     }
                     if (onDelete != null) {
                         IconButton(onClick = onDelete) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete Debt", tint = MaterialTheme.colorScheme.error)
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_debt), tint = MaterialTheme.colorScheme.error)
                         }
                     }
                     

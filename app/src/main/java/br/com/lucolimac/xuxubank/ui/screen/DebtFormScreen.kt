@@ -12,9 +12,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.ui.platform.LocalLocale
 
 /**
  * Screen for creating or editing debt information following Mobile Design Standards.
@@ -25,7 +25,7 @@ fun DebtFormScreen(
     clientId: Long,
     clientName: String,
     debt: DebtEntity? = null,
-    onSave: (Long, String, Double, Long?, Int) -> Unit,
+    onSave: (Long, String, BigDecimal, Long?, Int) -> Unit,
     onCancel: () -> Unit
 ) {
     var description by remember { mutableStateOf(debt?.description ?: "") }
@@ -35,14 +35,15 @@ fun DebtFormScreen(
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = debt?.dueDate ?: System.currentTimeMillis())
     var showDatePicker by remember { mutableStateOf(false) }
 
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", LocalLocale.current.platformLocale)
+    val dateFormatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("pt-BR")) }
     val dateDisplay = datePickerState.selectedDateMillis?.let { dateFormatter.format(Date(it)) } ?: stringResource(R.string.no_date)
+    val debtFormA11y = stringResource(R.string.debt_form_a11y)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .semantics { contentDescription = "Formulário de lançamento de dívida" }
+            .semantics { contentDescription = debtFormA11y }
     ) {
         Text(
             text = if (debt == null) stringResource(R.string.new_debt_for, clientName) else stringResource(R.string.edit_debt_for, clientName),
@@ -57,22 +58,22 @@ fun DebtFormScreen(
             label = { Text(stringResource(R.string.description)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            placeholder = { Text("Ex: Compra de materiais") }
+            placeholder = { Text(stringResource(R.string.description_placeholder)) }
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
             value = amount,
             onValueChange = { newValue ->
-                // Basic validation: permit only digits and one dot
-                if (newValue.isEmpty() || newValue.matches(Regex("""^\d*\.?\d*$"""))) {
+                // Basic validation: permit only digits and one dot or comma
+                if (newValue.isEmpty() || newValue.matches(Regex("""^\d*([.,]\d{0,2})?$"""))) {
                     amount = newValue
                 }
             },
             label = { Text(stringResource(R.string.amount)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
-            prefix = { Text("R$ ") },
+            prefix = { Text(stringResource(R.string.currency_prefix, "")) },
             singleLine = true
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -102,7 +103,7 @@ fun DebtFormScreen(
                 onDismissRequest = { showDatePicker = false },
                 confirmButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("Confirmar")
+                        Text(stringResource(R.string.confirm))
                     }
                 }
             ) {
@@ -124,18 +125,22 @@ fun DebtFormScreen(
                 Text(stringResource(R.string.cancel))
             }
             
+            val bigDecimalAmount = amount.replace(",", ".").toBigDecimalOrNull()
+            
             Button(
                 onClick = {
-                    onSave(
-                        clientId,
-                        description,
-                        amount.toDoubleOrNull() ?: 0.0,
-                        datePickerState.selectedDateMillis,
-                        installments.toIntOrNull() ?: 1
-                    )
+                    bigDecimalAmount?.let {
+                        onSave(
+                            clientId,
+                            description,
+                            it,
+                            datePickerState.selectedDateMillis,
+                            installments.toIntOrNull() ?: 1
+                        )
+                    }
                 },
                 modifier = Modifier.weight(1f).height(56.dp),
-                enabled = description.isNotBlank() && amount.toDoubleOrNull() != null,
+                enabled = description.isNotBlank() && bigDecimalAmount != null,
                 shape = MaterialTheme.shapes.large
             ) {
                 Text(if (debt == null) stringResource(R.string.save_debt) else stringResource(R.string.update_debt))

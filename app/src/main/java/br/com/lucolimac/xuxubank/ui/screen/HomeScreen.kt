@@ -40,11 +40,11 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.hello_user, user?.name ?: "Visitante"),
+                text = stringResource(R.string.hello_user, user?.name ?: stringResource(R.string.visitor)),
                 style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                text = stringResource(R.string.role_label, user?.role?.name ?: "Nenhum"),
+                text = stringResource(R.string.role_label, user?.role?.name ?: stringResource(R.string.none)),
                 style = MaterialTheme.typography.bodyLarge,
                 color = if (user?.role == br.com.lucolimac.xuxubank.data.local.entity.UserRole.MANAGER) 
                     MaterialTheme.colorScheme.primary 

@@ -19,7 +19,9 @@ import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
 import br.com.lucolimac.xuxubank.ui.component.SummaryCard
 import br.com.lucolimac.xuxubank.ui.component.debt.DebtItem
+import br.com.lucolimac.xuxubank.ui.util.FormatUtils
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,30 +36,67 @@ fun MonthlyOverviewScreen(
     var filterStatus by remember { mutableStateOf<DebtStatus?>(null) }
     var showFilterMenu by remember { mutableStateOf(false) }
 
-    val filteredDebts = if (filterStatus == null) debts else debts.filter { it.status == filterStatus }
-    val totalReceivable = filteredDebts.sumOf { it.amount }
+    // Using remember for derived states to ensure reactivity and performance
+    val filteredDebts = remember(debts, filterStatus) {
+        if (filterStatus == null) debts else debts.filter { it.status == filterStatus }
+    }
+    
+    // New calculations for the requested summaries using BigDecimal
+    val overallTotalReceivable = remember(debts) {
+        debts.filter { it.status != DebtStatus.PAID }
+            .fold(BigDecimal.ZERO) { acc, debt -> acc + debt.amount }
+    }
 
-    val sdf = SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("pt-BR"))
+    val currentMonthMillis = remember {
+        Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
 
-    val groupedDebts = filteredDebts.sortedBy { it.dueDate ?: 0L }.groupBy {
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = it.dueDate ?: 0L
-        if (it.dueDate == null) {
-            0L
-        } else {
-            cal.set(Calendar.DAY_OF_MONTH, 1)
-            cal.set(Calendar.HOUR_OF_DAY, 0)
-            cal.set(Calendar.MINUTE, 0)
-            cal.set(Calendar.SECOND, 0)
-            cal.set(Calendar.MILLISECOND, 0)
-            cal.timeInMillis
+    val currentMonthDebts = remember(debts, currentMonthMillis) {
+        debts.filter {
+            it.dueDate != null && it.dueDate >= currentMonthMillis && it.dueDate < Calendar.getInstance().apply {
+                timeInMillis = currentMonthMillis
+                add(Calendar.MONTH, 1)
+            }.timeInMillis
+        }
+    }
+
+    val currentMonthReceivable = currentMonthDebts.filter { it.status != DebtStatus.PAID }
+        .fold(BigDecimal.ZERO) { acc, debt -> acc + debt.amount }
+        
+    val currentMonthPaid = currentMonthDebts.filter { it.status == DebtStatus.PAID }
+        .fold(BigDecimal.ZERO) { acc, debt -> acc + debt.amount }
+
+    val sdf = remember { SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("pt-BR")) }
+    val monthlyOverviewA11y = stringResource(R.string.monthly_overview_a11y)
+
+    val groupedDebts = remember(filteredDebts) {
+        filteredDebts.sortedBy { it.dueDate ?: 0L }.groupBy {
+            if (it.dueDate == null) {
+                0L
+            } else {
+                val cal = Calendar.getInstance().apply {
+                    timeInMillis = it.dueDate
+                    set(Calendar.DAY_OF_MONTH, 1)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                cal.timeInMillis
+            }
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .semantics { contentDescription = "Tela de visão geral mensal de dívidas" }
+            .semantics { contentDescription = monthlyOverviewA11y }
     ) {
         Row(
             modifier = Modifier
@@ -82,7 +121,7 @@ fun MonthlyOverviewScreen(
                     onClick = { showFilterMenu = true },
                     modifier = Modifier.size(48.dp) // Minimum touch target
                 ) {
-                    Icon(Icons.Default.FilterList, contentDescription = "Filtrar por status")
+                    Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.filter_by_status))
                 }
                 DropdownMenu(
                     expanded = showFilterMenu,
@@ -109,9 +148,55 @@ fun MonthlyOverviewScreen(
 
         SummaryCard(
             title = stringResource(R.string.total_receivable),
-            amount = totalReceivable,
+            amount = overallTotalReceivable,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Current Month Details
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = stringResource(R.string.current_month_summary),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text(stringResource(R.string.to_receive), style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            text = FormatUtils.formatMonetary(currentMonthReceivable),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(stringResource(R.string.already_paid), style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            text = FormatUtils.formatMonetary(currentMonthPaid),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                }
+            }
+        }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -129,7 +214,7 @@ fun MonthlyOverviewScreen(
             }
 
             groupedDebts.forEach { (monthMillis, monthDebts) ->
-                item {
+                item(key = "header_$monthMillis") {
                     val header = if (monthMillis == 0L) stringResource(R.string.no_due_date_header) else sdf.format(Date(monthMillis))
                     Text(
                         text = header.replaceFirstChar { it.uppercase() },
@@ -139,7 +224,10 @@ fun MonthlyOverviewScreen(
                         modifier = Modifier.padding(vertical = 8.dp).semantics { heading() }
                     )
                 }
-                items(monthDebts) { debt ->
+                items(
+                    items = monthDebts,
+                    key = { it.id } // Essential for identifying updates
+                ) { debt ->
                     DebtItem(
                         debt = debt,
                         onUpdateStatus = { debtViewModel.updateStatus(debt.id, it) },

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewModel() {
     val allDebts: StateFlow<List<DebtEntity>> = manageDebtUseCase.getAllDebts()
@@ -28,7 +29,7 @@ class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewMode
     fun saveDebt(
         clientId: Long,
         description: String,
-        amount: Double,
+        amount: BigDecimal,
         dueDate: Long?,
         installments: Int
     ) {

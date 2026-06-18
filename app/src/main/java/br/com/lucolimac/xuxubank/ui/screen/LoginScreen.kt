@@ -31,12 +31,17 @@ fun LoginScreen(
     var identifier by remember { mutableStateOf("") }
     val isEmail = identifier.contains("@")
     val isValid = if (isEmail) ValidationUtils.isValidEmail(identifier) else ValidationUtils.isValidPhone(identifier)
+    
+    val loginScreenA11y = stringResource(R.string.login_screen_a11y)
+    val clientAccessInputA11y = stringResource(R.string.client_access_input_a11y)
+    val loginButtonA11y = stringResource(R.string.login_button_a11y)
+    val loadingA11y = stringResource(R.string.loading_a11y)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .semantics { contentDescription = "Tela de Login do XuxuBank" },
+            .semantics { contentDescription = loginScreenA11y },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -47,7 +52,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Identifique-se para acessar sua conta.",
+            text = stringResource(R.string.login_instruction),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -60,17 +65,17 @@ fun LoginScreen(
                 identifier = it
                 if (loginState is LoginUIState.Error) onResetError()
             },
-            label = { Text("E-mail ou Telefone") },
+            label = { Text(stringResource(R.string.email_or_phone)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "Campo de entrada para e-mail ou telefone" },
+                .semantics { contentDescription = clientAccessInputA11y },
             singleLine = true,
             isError = loginState is LoginUIState.Error,
             supportingText = {
                 if (loginState is LoginUIState.Error) {
-                    Text(text = loginState.message, color = MaterialTheme.colorScheme.error)
+                    Text(text = stringResource(loginState.messageRes), color = MaterialTheme.colorScheme.error)
                 } else {
-                    Text(text = "Use o formato (XX) XXXXX-XXXX para celular")
+                    Text(text = stringResource(R.string.phone_mask_hint))
                 }
             },
             visualTransformation = if (isEmail) androidx.compose.ui.text.input.VisualTransformation.None else PhoneVisualTransformation(),
@@ -87,13 +92,13 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp) // Enhanced touch target height
-                .semantics { contentDescription = "Botão para entrar no sistema" },
+                .semantics { contentDescription = loginButtonA11y },
             enabled = isValid && loginState !is LoginUIState.Loading,
             shape = MaterialTheme.shapes.large
         ) {
             if (loginState is LoginUIState.Loading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp).semantics { contentDescription = "Carregando acesso" },
+                    modifier = Modifier.size(24.dp).semantics { contentDescription = loadingA11y },
                     strokeWidth = 2.dp,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -109,7 +114,7 @@ fun LoginScreen(
             modifier = Modifier.minimumInteractiveComponentSize() // Ensures 48dp touch target
         ) {
             Text(
-                text = "Entrar como Gerente (Demo)",
+                text = stringResource(R.string.login_manager_demo),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.secondary
             )

@@ -59,7 +59,47 @@
     <string name="filter_label">Filtro: %1$s</string>
     <string name="all">Todos</string>
 
+    <!-- Unified Login & Identification -->
     <string name="client_login_instruction">Insira seu E-mail ou Telefone para acessar:</string>
+    <string name="login_instruction">Identifique-se para acessar sua conta.</string>
+    <string name="email_or_phone">E-mail ou Telefone</string>
+    <string name="phone_mask_hint">Use o formato (XX) XXXXX-XXXX para celular</string>
+    <string name="login_manager_demo">Entrar como Gerente (Demo)</string>
     <string name="login">Entrar</string>
     <string name="client_not_found">Cliente não encontrado. Verifique os dados ou contate o gerente.</string>
+    <string name="invalid_credentials">Dados de acesso inválidos.</string>
+
+    <!-- Financial Summaries -->
+    <string name="current_month_summary">RESUMO DO MÊS ATUAL</string>
+    <string name="financial_summary">RESUMO FINANCEIRO</string>
+    <string name="to_receive">A Receber</string>
+    <string name="already_paid">Já Pago</string>
+    <string name="to_pay">A Pagar</string>
+    <string name="overdue_label">Atrasado (Total)</string>
+    <string name="my_debts">MINHAS DÍVIDAS</string>
+    <string name="debt_history_label">HISTÓRICO DE DÍVIDAS</string>
+
+    <!-- Validation & Support -->
+    <string name="invalid_name">Nome inválido</string>
+    <string name="invalid_email">E-mail inválido</string>
+    <string name="invalid_phone">Telefone incompleto (DDD + 9 dígitos)</string>
+    <string name="description_placeholder">Ex: Compra de materiais</string>
+    <string name="confirm">Confirmar</string>
+    <string name="filter_by_status">Filtrar por status</string>
+
+    <!-- Formatting & A11y -->
+    <string name="currency_prefix">R$ %1$s</string>
+    <string name="summary_a11y">Resumo financeiro: %1$s. Valor total: %2$s reais</string>
+    <string name="monthly_overview_a11y">Tela de visão geral mensal de dívidas</string>
+    <string name="login_screen_a11y">Tela de Login do XuxuBank</string>
+    <string name="client_form_a11y">Formulário de cadastro de cliente</string>
+    <string name="debt_form_a11y">Formulário de lançamento de dívida</string>
+    <string name="client_access_input_a11y">Campo de entrada para e-mail ou telefone</string>
+    <string name="login_button_a11y">Botão para entrar no sistema</string>
+    <string name="loading_a11y">Carregando acesso</string>
+
+    <!-- Fallbacks -->
+    <string name="unknown">Desconhecido</string>
+    <string name="visitor">Visitante</string>
+    <string name="none">Nenhum</string>
 </resources>

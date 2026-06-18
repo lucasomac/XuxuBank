@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 
 enum class DebtStatus {
     PENDING, OVERDUE, PAID
@@ -25,7 +26,7 @@ data class DebtEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val clientId: Long,
     val description: String,
-    val amount: Double,
+    val amount: BigDecimal,
     val dueDate: Long? = null,
     val status: DebtStatus = DebtStatus.PENDING,
     val totalInstallments: Int = 1,

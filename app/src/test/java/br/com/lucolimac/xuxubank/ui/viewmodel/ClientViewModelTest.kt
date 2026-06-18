@@ -29,6 +29,9 @@ class ClientViewModelTest {
         val clientsFlow = MutableStateFlow<List<ClientEntity>>(emptyList())
         override fun getAllClients(): Flow<List<ClientEntity>> = clientsFlow
         override suspend fun getClientById(id: Long): ClientEntity? = clientsFlow.value.find { it.id == id }
+        override suspend fun getClientByIdentifier(identifier: String): ClientEntity? {
+            return clientsFlow.value.find { it.email == identifier || it.phone == identifier }
+        }
         override suspend fun saveClient(client: ClientEntity): Long {
             clientsFlow.value += client
             return client.id
@@ -58,7 +61,7 @@ class ClientViewModelTest {
     @Test
     fun `allClients should reflect data from repository`() = runTest {
         // Given
-        val client = ClientEntity(id = 1, name = "John Doe")
+        val client = ClientEntity(id = 1, name = "John Doe", email = "john@doe.com", phone = "11999999999")
         
         // When
         fakeClientRepository.clientsFlow.value = listOf(client)

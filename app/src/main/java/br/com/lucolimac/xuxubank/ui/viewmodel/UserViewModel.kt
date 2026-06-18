@@ -1,7 +1,9 @@
 package br.com.lucolimac.xuxubank.ui.viewmodel
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
 import br.com.lucolimac.xuxubank.domain.usecase.LoginResult
 import br.com.lucolimac.xuxubank.domain.usecase.ManageUserUseCase
@@ -32,12 +34,12 @@ class UserViewModel(private val manageUserUseCase: ManageUserUseCase) : ViewMode
     fun login(identifier: String) {
         viewModelScope.launch {
             _loginState.value = LoginUIState.Loading
-            when (val result = manageUserUseCase.login(identifier)) {
+            when (manageUserUseCase.login(identifier)) {
                 is LoginResult.Success -> {
                     _loginState.value = LoginUIState.Success
                 }
                 is LoginResult.InvalidCredentials -> {
-                    _loginState.value = LoginUIState.Error("Dados de acesso inválidos.")
+                    _loginState.value = LoginUIState.Error(R.string.invalid_credentials)
                 }
             }
         }
@@ -59,8 +61,9 @@ class UserViewModel(private val manageUserUseCase: ManageUserUseCase) : ViewMode
  * Represents the various states of the login process.
  */
 sealed interface LoginUIState {
-    object Idle : LoginUIState
-    object Loading : LoginUIState
-    object Success : LoginUIState
-    data class Error(val message: String) : LoginUIState
+    data object Idle : LoginUIState
+    data object Loading : LoginUIState
+    data object Success : LoginUIState
+    data class Error(@param:StringRes val messageRes: Int) : LoginUIState
 }
+

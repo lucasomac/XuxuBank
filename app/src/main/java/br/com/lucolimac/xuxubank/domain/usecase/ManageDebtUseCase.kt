@@ -6,11 +6,13 @@ import br.com.lucolimac.xuxubank.data.local.toEntity
 import br.com.lucolimac.xuxubank.domain.model.Debt
 import br.com.lucolimac.xuxubank.domain.repository.DebtRepository
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Calendar
 
 /**
  * Business logic for managing debts.
- * Handles installment distribution and date calculations.
+ * Handles installment distribution and date calculations using BigDecimal for accuracy.
  */
 class ManageDebtUseCase(private val debtRepository: DebtRepository) {
 
@@ -32,18 +34,18 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
     suspend fun createDebt(
         clientId: Long,
         description: String,
-        totalAmount: Double,
+        totalAmount: BigDecimal,
         firstDueDate: Long?,
         installments: Int
     ) {
-        val amountPerInstallment = totalAmount / installments
+        val amountPerInstallment = totalAmount.divide(BigDecimal(installments), 2, RoundingMode.HALF_UP)
         val calendar = Calendar.getInstance()
         firstDueDate?.let { calendar.timeInMillis = it }
 
         for (i in 1..installments) {
             val debt = Debt(
                 id = 0,
-                clientId = clientId, // Mapping clientId to domain model's clientId
+                clientId = clientId,
                 description = if (installments > 1) "$description ($i/$installments)" else description,
                 amount = amountPerInstallment,
                 dueDate = if (firstDueDate != null) calendar.timeInMillis else null,
@@ -54,7 +56,6 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
             )
             debtRepository.saveDebt(debt.toEntity())
             
-            // Increment month for the next installment entry
             if (firstDueDate != null) {
                 calendar.add(Calendar.MONTH, 1)
             }

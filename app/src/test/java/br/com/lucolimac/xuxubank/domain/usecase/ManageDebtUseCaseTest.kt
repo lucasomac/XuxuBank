@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.Calendar
+import java.math.BigDecimal
 
 /**
  * Unit tests for ManageDebtUseCase following the 'testing-setup' skill.
@@ -36,7 +36,7 @@ class ManageDebtUseCaseTest {
         // Given
         val clientId = 1L
         val description = "Test Debt"
-        val totalAmount = 1000.0
+        val totalAmount = BigDecimal("1000.00")
         val installments = 10
         val firstDueDate = System.currentTimeMillis()
 
@@ -45,7 +45,7 @@ class ManageDebtUseCaseTest {
 
         // Then
         assertEquals(installments, fakeDebtRepository.savedDebts.size)
-        assertEquals(100.0, fakeDebtRepository.savedDebts[0].amount, 0.01)
+        assertEquals(BigDecimal("100.00"), fakeDebtRepository.savedDebts[0].amount)
         assertEquals("Test Debt (1/10)", fakeDebtRepository.savedDebts[0].description)
     }
 }

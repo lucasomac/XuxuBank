@@ -4,13 +4,23 @@ Este arquivo mantém o histórico de todas as atualizações e melhorias impleme
 
 ---
 
+## [1.2.2] — 2026-06-12
+### Adicionado
+- **Resumos Financeiros Inteligentes:** Novas seções de resumo no topo das telas de Gerente e Cliente.
+- **Visão do Mês Atual:** Cálculo automático de valores "A Receber/Pagar" e "Já Pago" para o mês vigente.
+- **Alertas de Atraso:** Destaque visual em vermelho para o total acumulado de dívidas vencidas na visão do Cliente.
+- **Refatoração de Componentes:** Organização modular do código, movendo componentes para arquivos individuais (ex: `DebtItem`, `StatusChip`).
+
 ## [1.2.1] — 2026-06-12
 ### Adicionado
 - **Mobile Design Standards:** Aperfeiçoamento da interface seguindo os padrões `/mobile-app-design`.
+- **Precisão Monetária:** Migração de todos os valores financeiros de `Double` para `BigDecimal`, garantindo cálculos exatos e sem erros de arredondamento.
+- **Refatoração de Utilitários:** Criação do arquivo `FormatUtils.kt` para centralizar a formatação de moedas e datas, mantendo `ValidationUtils.kt` focado exclusivamente em regras de validação.
 - **Acessibilidade (a11y):** Inclusão de `contentDescription` em telas e componentes financeiros para suporte a leitores de tela.
 - **Otimização de Touch Targets:** Garantia de alvos de toque mínimos de 48dp em todos os elementos interativos.
 - **Validação de Entrada:** Filtros em tempo real para campos numéricos e melhorias nos tipos de teclado (numérico vs. e-mail).
 - **UX Refinada:** Melhorias no espaçamento (spacing system) e feedback visual em formulários.
+- **Correção de Formatação:** Melhoria na função `formatMonetary` para suportar entradas com vírgula e garantir o prefixo "R$ " corretamente.
 
 ## [1.2.0] — 2026-06-08
 ### Adicionado

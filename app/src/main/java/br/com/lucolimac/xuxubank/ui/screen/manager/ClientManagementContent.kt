@@ -129,7 +129,7 @@ fun ClientManagementContent(
                 val existingDebt = if (key.debtId != null) allDebts.find { it.id == key.debtId } else null
                 DebtFormScreen(
                     clientId = key.clientId,
-                    clientName = client?.name ?: "Desconhecido",
+                    clientName = client?.name ?: stringResource(R.string.unknown),
                     debt = existingDebt,
                     onSave = { id, desc, amt, date, inst ->
                         if (existingDebt != null) {
