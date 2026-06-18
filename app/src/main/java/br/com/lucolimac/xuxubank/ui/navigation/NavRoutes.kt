@@ -20,11 +20,11 @@ sealed interface NavRoute : NavKey {
     data object ClientList : NavRoute
 
     @Serializable
-    data class ClientDetail(val id: Long) : NavRoute
+    data class ClientDetail(val id: String) : NavRoute
 
     @Serializable
-    data class ClientForm(val id: Long? = null) : NavRoute
+    data class ClientForm(val id: String? = null) : NavRoute
 
     @Serializable
-    data class DebtForm(val clientId: Long, val debtId: Long? = null) : NavRoute
+    data class DebtForm(val clientId: String, val debtId: String? = null) : NavRoute
 }

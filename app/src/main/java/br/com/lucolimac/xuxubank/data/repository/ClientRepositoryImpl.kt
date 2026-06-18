@@ -8,11 +8,14 @@ import kotlinx.coroutines.flow.Flow
 class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository {
     override fun getAllClients(): Flow<List<ClientEntity>> = clientDao.getAllClients()
 
-    override suspend fun getClientById(id: Long): ClientEntity? = clientDao.getClientById(id)
+    override suspend fun getClientById(id: String): ClientEntity? = clientDao.getClientById(id)
 
     override suspend fun getClientByIdentifier(identifier: String): ClientEntity? = clientDao.getClientByIdentifier(identifier)
 
-    override suspend fun saveClient(client: ClientEntity): Long = clientDao.insertClient(client)
+    override suspend fun saveClient(client: ClientEntity): String {
+        clientDao.insertClient(client)
+        return client.id
+    }
 
     override suspend fun updateClient(client: ClientEntity) = clientDao.updateClient(client)
 

@@ -2,9 +2,9 @@ package br.com.lucolimac.xuxubank.di
 
 import androidx.room.Room
 import br.com.lucolimac.xuxubank.data.local.XuxuDatabase
-import br.com.lucolimac.xuxubank.data.repository.DebtRepositoryImpl
-import br.com.lucolimac.xuxubank.data.repository.ClientRepositoryImpl
-import br.com.lucolimac.xuxubank.data.repository.UserRepositoryImpl
+import br.com.lucolimac.xuxubank.data.remote.ClientRepositoryFirestoreImpl
+import br.com.lucolimac.xuxubank.data.remote.DebtRepositoryFirestoreImpl
+import br.com.lucolimac.xuxubank.data.remote.UserRepositoryFirestoreImpl
 import br.com.lucolimac.xuxubank.domain.repository.DebtRepository
 import br.com.lucolimac.xuxubank.domain.repository.ClientRepository
 import br.com.lucolimac.xuxubank.domain.repository.UserRepository
@@ -14,6 +14,8 @@ import br.com.lucolimac.xuxubank.domain.usecase.ManageUserUseCase
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
 import br.com.lucolimac.xuxubank.ui.viewmodel.ClientViewModel
 import br.com.lucolimac.xuxubank.ui.viewmodel.UserViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -23,7 +25,7 @@ import org.koin.dsl.module
  * Groups database, repository, use case, and viewmodel instances.
  */
 val appModule = module {
-    // Database singleton
+    // Database singleton (Local Room)
     single {
         Room.databaseBuilder(
                 androidContext(),
@@ -38,10 +40,13 @@ val appModule = module {
     single { get<XuxuDatabase>().clientDao() }
     single { get<XuxuDatabase>().debtDao() }
 
-    // Repository implementations
-    single<UserRepository> { UserRepositoryImpl(get()) }
-    single<ClientRepository> { ClientRepositoryImpl(get()) }
-    single<DebtRepository> { DebtRepositoryImpl(get()) }
+    // Firebase Firestore
+    single { Firebase.firestore }
+
+    // Repository implementations (Migrated to Firestore)
+    single<UserRepository> { UserRepositoryFirestoreImpl(get()) }
+    single<ClientRepository> { ClientRepositoryFirestoreImpl(get()) }
+    single<DebtRepository> { DebtRepositoryFirestoreImpl(get()) }
 
     // Use Case factories
     factory { ManageUserUseCase(get(), get()) }

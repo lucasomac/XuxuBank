@@ -4,6 +4,21 @@ Este arquivo mantém o histórico de todas as atualizações e melhorias impleme
 
 ---
 
+## [1.3.1] — 2026-06-12
+### Corrigido
+- **Desserialização do Firestore:** Adicionados construtores sem argumentos (valores padrão) para todas as entidades, corrigindo crash de execução.
+- **Precisão Remota:** Implementado mapeamento manual nos repositórios do Firestore para garantir que valores em `BigDecimal` e `Enums` sejam persistidos e recuperados com precisão total.
+
+## [1.3.0] — 2026-06-12
+### Adicionado
+- **Migração para Cloud Firestore:** Transição do banco de dados local Room para o Firebase Firestore como fonte primária de dados.
+- **Sincronização em Tempo Real:** O app agora reflete mudanças nos clientes e dívidas instantaneamente em todos os dispositivos conectados.
+- **IDs Baseados em String:** Atualização de toda a arquitetura para suportar identificadores alfanuméricos do Firestore.
+- **Infraestrutura Remota:** Implementação de novos repositórios Firestore (`ClientRepositoryFirestoreImpl`, `DebtRepositoryFirestoreImpl`, `UserRepositoryFirestoreImpl`).
+
+### Alterado
+- **Persistência Local:** O Room foi mantido como uma camada de cache offline (preparado para futuras otimizações).
+
 ## [1.2.2] — 2026-06-12
 ### Adicionado
 - **Resumos Financeiros Inteligentes:** Novas seções de resumo no topo das telas de Gerente e Cliente.

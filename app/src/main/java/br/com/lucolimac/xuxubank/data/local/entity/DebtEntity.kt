@@ -23,10 +23,10 @@ enum class DebtStatus {
     indices = [Index("clientId")]
 )
 data class DebtEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val clientId: Long,
-    val description: String,
-    val amount: BigDecimal,
+    @PrimaryKey val id: String = "",
+    val clientId: String = "",
+    val description: String = "",
+    val amount: BigDecimal = BigDecimal.ZERO,
     val dueDate: Long? = null,
     val status: DebtStatus = DebtStatus.PENDING,
     val totalInstallments: Int = 1,

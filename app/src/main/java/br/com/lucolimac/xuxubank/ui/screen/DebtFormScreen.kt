@@ -22,10 +22,10 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DebtFormScreen(
-    clientId: Long,
+    clientId: String,
     clientName: String,
     debt: DebtEntity? = null,
-    onSave: (Long, String, BigDecimal, Long?, Int) -> Unit,
+    onSave: (String, String, BigDecimal, Long?, Int) -> Unit,
     onCancel: () -> Unit
 ) {
     var description by remember { mutableStateOf(debt?.description ?: "") }

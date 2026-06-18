@@ -23,7 +23,7 @@ fun ClientDetailWithDebts(
     debtViewModel: DebtViewModel,
     onAddDebt: () -> Unit,
     onEditClient: () -> Unit,
-    onEditDebt: (Long) -> Unit
+    onEditDebt: (String) -> Unit
 ) {
     val allDebts by debtViewModel.allDebts.collectAsState()
     val clientDebts = allDebts.filter { it.clientId == client.id }

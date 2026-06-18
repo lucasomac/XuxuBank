@@ -27,7 +27,7 @@ class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewMode
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun saveDebt(
-        clientId: Long,
+        clientId: String,
         description: String,
         amount: BigDecimal,
         dueDate: Long?,
@@ -44,13 +44,13 @@ class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewMode
         }
     }
 
-    fun updateStatus(debtId: Long, status: DebtStatus) {
+    fun updateStatus(debtId: String, status: DebtStatus) {
         viewModelScope.launch {
             manageDebtUseCase.updateDebtStatus(debtId, status)
         }
     }
 
-    fun deleteDebt(debtId: Long) {
+    fun deleteDebt(debtId: String) {
         viewModelScope.launch {
             manageDebtUseCase.deleteDebt(debtId)
         }

@@ -9,8 +9,8 @@ enum class UserRole {
 
 @Entity(tableName = "users")
 data class UserEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String,
-    val role: UserRole,
-    val clientId: Long? = null // Associated client ID, null if Manager
+    @PrimaryKey val id: String = "",
+    val name: String = "",
+    val role: UserRole = UserRole.CLIENT,
+    val clientId: String? = null // Associated client ID, null if Manager
 )

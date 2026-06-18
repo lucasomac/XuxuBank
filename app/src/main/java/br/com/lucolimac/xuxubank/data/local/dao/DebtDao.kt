@@ -11,13 +11,13 @@ interface DebtDao {
     fun getAllDebts(): Flow<List<DebtEntity>>
 
     @Query("SELECT * FROM debts WHERE clientId = :clientId")
-    fun getDebtsByClient(clientId: Long): Flow<List<DebtEntity>>
+    fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>>
 
     @Query("SELECT * FROM debts WHERE status = :status")
     fun getDebtsByStatus(status: DebtStatus): Flow<List<DebtEntity>>
 
     @Query("SELECT * FROM debts WHERE id = :id")
-    suspend fun getDebtById(id: Long): DebtEntity?
+    suspend fun getDebtById(id: String): DebtEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDebt(debt: DebtEntity)

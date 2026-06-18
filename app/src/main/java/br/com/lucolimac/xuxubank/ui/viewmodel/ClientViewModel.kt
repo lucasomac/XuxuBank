@@ -32,7 +32,7 @@ class ClientViewModel(private val manageClientUseCase: ManageClientUseCase) : Vi
         }
     }
 
-    fun deleteClient(clientId: Long) {
+    fun deleteClient(clientId: String) {
         viewModelScope.launch {
             manageClientUseCase.deleteClient(clientId)
         }

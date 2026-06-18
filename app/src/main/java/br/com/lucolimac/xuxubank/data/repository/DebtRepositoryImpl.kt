@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 class DebtRepositoryImpl(private val debtDao: DebtDao) : DebtRepository {
     override fun getAllDebts(): Flow<List<DebtEntity>> = debtDao.getAllDebts()
 
-    override fun getDebtsByClient(clientId: Long): Flow<List<DebtEntity>> = debtDao.getDebtsByClient(clientId)
+    override fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>> = debtDao.getDebtsByClient(clientId)
 
     override fun getDebtsByStatus(status: DebtStatus): Flow<List<DebtEntity>> = debtDao.getDebtsByStatus(status)
 
-    override suspend fun getDebtById(id: Long): DebtEntity? = debtDao.getDebtById(id)
+    override suspend fun getDebtById(id: String): DebtEntity? = debtDao.getDebtById(id)
 
     override suspend fun saveDebt(debt: DebtEntity) = debtDao.insertDebt(debt)
 

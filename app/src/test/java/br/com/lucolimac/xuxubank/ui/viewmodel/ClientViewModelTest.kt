@@ -19,6 +19,7 @@ import org.junit.Test
 
 /**
  * Unit tests for ClientViewModel following the 'testing-setup' skill.
+ * Updated for String IDs (Firestore compatibility).
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ClientViewModelTest {
@@ -28,11 +29,11 @@ class ClientViewModelTest {
     private val fakeClientRepository = object : ClientRepository {
         val clientsFlow = MutableStateFlow<List<ClientEntity>>(emptyList())
         override fun getAllClients(): Flow<List<ClientEntity>> = clientsFlow
-        override suspend fun getClientById(id: Long): ClientEntity? = clientsFlow.value.find { it.id == id }
+        override suspend fun getClientById(id: String): ClientEntity? = clientsFlow.value.find { it.id == id }
         override suspend fun getClientByIdentifier(identifier: String): ClientEntity? {
             return clientsFlow.value.find { it.email == identifier || it.phone == identifier }
         }
-        override suspend fun saveClient(client: ClientEntity): Long {
+        override suspend fun saveClient(client: ClientEntity): String {
             clientsFlow.value += client
             return client.id
         }
@@ -61,7 +62,7 @@ class ClientViewModelTest {
     @Test
     fun `allClients should reflect data from repository`() = runTest {
         // Given
-        val client = ClientEntity(id = 1, name = "John Doe", email = "john@doe.com", phone = "11999999999")
+        val client = ClientEntity(id = "1", name = "John Doe", email = "john@doe.com", phone = "11999999999")
         
         // When
         fakeClientRepository.clientsFlow.value = listOf(client)

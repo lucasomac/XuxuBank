@@ -36,7 +36,7 @@ class ManageUserUseCase(
     suspend fun login(identifier: String): LoginResult {
         // 1. Check for Manager
         if (identifier.equals(MANAGER_IDENTIFIER, ignoreCase = true)) {
-            val manager = UserEntity(id = 1, name = MANAGER_NAME, role = UserRole.MANAGER)
+            val manager = UserEntity(id = "1", name = MANAGER_NAME, role = UserRole.MANAGER)
             userRepository.saveUser(manager)
             return LoginResult.Success(UserRole.MANAGER)
         }
@@ -45,7 +45,7 @@ class ManageUserUseCase(
         val client = clientRepository.getClientByIdentifier(identifier)
         return if (client != null) {
             val user = UserEntity(
-                id = 1, 
+                id = "1", 
                 name = client.name, 
                 role = UserRole.CLIENT, 
                 clientId = client.id
@@ -61,7 +61,7 @@ class ManageUserUseCase(
      * Clears the current user session.
      */
     suspend fun logout() {
-        userRepository.getUserById(1)?.let {
+        userRepository.getUserById("1")?.let {
             userRepository.deleteUser(it)
         }
     }

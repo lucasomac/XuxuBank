@@ -20,20 +20,20 @@ class ManageClientUseCase(private val clientRepository: ClientRepository) {
     /**
      * Finds a specific client by their unique ID.
      */
-    suspend fun getClientById(id: Long): ClientEntity? = clientRepository.getClientById(id)
+    suspend fun getClientById(id: String): ClientEntity? = clientRepository.getClientById(id)
 
     /**
      * Registers a new client in the system.
      */
-    suspend fun createClient(name: String, email: String, phone: String): Long {
-        val client = Client(0, name, email, phone)
+    suspend fun createClient(name: String, email: String, phone: String): String {
+        val client = Client("", name, email, phone)
         return clientRepository.saveClient(client.toEntity())
     }
 
     /**
      * Updates an existing client's information.
      */
-    suspend fun updateClient(id: Long, name: String, email: String, phone: String) {
+    suspend fun updateClient(id: String, name: String, email: String, phone: String) {
         val client = Client(id, name, email, phone)
         clientRepository.updateClient(client.toEntity())
     }
@@ -41,7 +41,7 @@ class ManageClientUseCase(private val clientRepository: ClientRepository) {
     /**
      * Removes a client from the system.
      */
-    suspend fun deleteClient(clientId: Long) {
+    suspend fun deleteClient(clientId: String) {
         val client = clientRepository.getClientById(clientId)
         client?.let {
             clientRepository.deleteClient(it)

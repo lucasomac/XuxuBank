@@ -12,15 +12,16 @@ import java.math.BigDecimal
 
 /**
  * Unit tests for ManageDebtUseCase following the 'testing-setup' skill.
+ * Updated for String IDs (Firestore compatibility).
  */
 class ManageDebtUseCaseTest {
 
     private val fakeDebtRepository = object : DebtRepository {
         val savedDebts = mutableListOf<DebtEntity>()
         override fun getAllDebts(): Flow<List<DebtEntity>> = flowOf(savedDebts)
-        override fun getDebtsByClient(clientId: Long): Flow<List<DebtEntity>> = flowOf(savedDebts.filter { it.clientId == clientId })
+        override fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>> = flowOf(savedDebts.filter { it.clientId == clientId })
         override fun getDebtsByStatus(status: DebtStatus): Flow<List<DebtEntity>> = flowOf(savedDebts.filter { it.status == status })
-        override suspend fun getDebtById(id: Long): DebtEntity? = savedDebts.find { it.id == id }
+        override suspend fun getDebtById(id: String): DebtEntity? = savedDebts.find { it.id == id }
         override suspend fun saveDebt(debt: DebtEntity) { savedDebts.add(debt) }
         override suspend fun updateDebt(debt: DebtEntity) {
             val index = savedDebts.indexOfFirst { it.id == debt.id }
@@ -34,7 +35,7 @@ class ManageDebtUseCaseTest {
     @Test
     fun `createDebt should generate correct number of installments`() = runBlocking {
         // Given
-        val clientId = 1L
+        val clientId = "1"
         val description = "Test Debt"
         val totalAmount = BigDecimal("1000.00")
         val installments = 10

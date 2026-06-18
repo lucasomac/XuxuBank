@@ -24,7 +24,7 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
     /**
      * Filters debts for a specific client.
      */
-    fun getDebtsByClient(clientId: Long): Flow<List<DebtEntity>> = debtRepository.getDebtsByClient(clientId)
+    fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>> = debtRepository.getDebtsByClient(clientId)
 
     /**
      * Core logic for debt creation.
@@ -32,7 +32,7 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
      * multiple debt entries with sequential monthly due dates.
      */
     suspend fun createDebt(
-        clientId: Long,
+        clientId: String,
         description: String,
         totalAmount: BigDecimal,
         firstDueDate: Long?,
@@ -44,7 +44,7 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
 
         for (i in 1..installments) {
             val debt = Debt(
-                id = 0,
+                id = "",
                 clientId = clientId,
                 description = if (installments > 1) "$description ($i/$installments)" else description,
                 amount = amountPerInstallment,
@@ -69,14 +69,14 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
     /**
      * Directly toggles the status of a specific debt entry.
      */
-    suspend fun updateDebtStatus(debtId: Long, status: DebtStatus) {
+    suspend fun updateDebtStatus(debtId: String, status: DebtStatus) {
         val debt = debtRepository.getDebtById(debtId)
         debt?.let {
             debtRepository.updateDebt(it.copy(status = status))
         }
     }
 
-    suspend fun deleteDebt(debtId: Long) {
+    suspend fun deleteDebt(debtId: String) {
         val debt = debtRepository.getDebtById(debtId)
         debt?.let {
             debtRepository.deleteDebt(it)

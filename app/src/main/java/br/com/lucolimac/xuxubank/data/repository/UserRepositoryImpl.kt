@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
     override fun getAllUsers(): Flow<List<UserEntity>> = userDao.getAllUsers()
 
-    override suspend fun getUserById(id: Long): UserEntity? = userDao.getUserById(id)
+    override suspend fun getUserById(id: String): UserEntity? = userDao.getUserById(id)
 
     override suspend fun saveUser(user: UserEntity) {
         userDao.insertUser(user)
