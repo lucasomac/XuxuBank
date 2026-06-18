@@ -45,6 +45,8 @@ material = "1.14.0"
 koin = "4.2.1"
 glimmer = "1.0.0-alpha14"
 googleFonts = "1.11.2"
+googleGmsGoogleServices = "4.5.0"
+firebaseFirestore = "26.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -99,10 +101,12 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 androidx-xr-glimmer = { group = "androidx.xr.glimmer", name = "glimmer", version.ref = "glimmer" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevtoolsKsp" }
 jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jetbrainsKotlinPluginSerialization" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

@@ -32,7 +32,7 @@ fun DebtFormScreen(
     var amount by remember { mutableStateOf(debt?.amount?.toString() ?: "") }
     var installments by remember { mutableStateOf("1") }
 
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = debt?.dueDate ?: System.currentTimeMillis())
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = debt?.dueDate)
     var showDatePicker by remember { mutableStateOf(false) }
 
     val dateFormatter = remember { SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("pt-BR")) }
@@ -104,6 +104,14 @@ fun DebtFormScreen(
                 confirmButton = {
                     TextButton(onClick = { showDatePicker = false }) {
                         Text(stringResource(R.string.confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis = null
+                        showDatePicker = false
+                    }) {
+                        Text(stringResource(R.string.clear))
                     }
                 }
             ) {

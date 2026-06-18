@@ -7,8 +7,8 @@
     <string name="logout">Sair</string>
     <string name="hello_user">Olá, %1$s!</string>
     <string name="role_label">Papel: %1$s</string>
-    <string name="manager_info">Como Gerente, você pode gerenciar todos os clientes e suas dívidas.</string>
-    <string name="client_info">Como Cliente, você pode visualizar suas dívidas pessoais pendentes.</string>
+    <string name="manager_info">Como Gerente, você pode gerir todos os clientes e as suas dívidas.</string>
+    <string name="client_info">Como Cliente, você pode visualizar as suas dívidas pessoais pendentes.</string>
     <string name="clients_management">Gerenciamento de Clientes</string>
     <string name="monthly_overview">Visão Geral Mensal</string>
     <string name="no_clients">Nenhum cliente cadastrado ainda.</string>
@@ -85,13 +85,14 @@
     <string name="invalid_phone">Telefone incompleto (DDD + 9 dígitos)</string>
     <string name="description_placeholder">Ex: Compra de materiais</string>
     <string name="confirm">Confirmar</string>
+    <string name="clear">Limpar</string>
     <string name="filter_by_status">Filtrar por status</string>
 
     <!-- Formatting & A11y -->
     <string name="currency_prefix">R$ %1$s</string>
     <string name="summary_a11y">Resumo financeiro: %1$s. Valor total: %2$s reais</string>
     <string name="monthly_overview_a11y">Tela de visão geral mensal de dívidas</string>
-    <string name="login_screen_a11y">Tela de Login do XuxuBank</string>
+    <string name="login_screen_a11y">Tela de ‘Login’ do XuxuBank</string>
     <string name="client_form_a11y">Formulário de cadastro de cliente</string>
     <string name="debt_form_a11y">Formulário de lançamento de dívida</string>
     <string name="client_access_input_a11y">Campo de entrada para e-mail ou telefone</string>

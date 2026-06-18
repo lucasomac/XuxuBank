@@ -18,6 +18,7 @@ Este arquivo mantém o histórico de todas as atualizações e melhorias impleme
 - **Refatoração de Utilitários:** Criação do arquivo `FormatUtils.kt` para centralizar a formatação de moedas e datas, mantendo `ValidationUtils.kt` focado exclusivamente em regras de validação.
 - **Acessibilidade (a11y):** Inclusão de `contentDescription` em telas e componentes financeiros para suporte a leitores de tela.
 - **Otimização de Touch Targets:** Garantia de alvos de toque mínimos de 48dp em todos os elementos interativos.
+- **Data de Vencimento Opcional:** A data de vencimento de dívidas agora é opcional durante o cadastro, permitindo maior flexibilidade no lançamento de cobranças.
 - **Validação de Entrada:** Filtros em tempo real para campos numéricos e melhorias nos tipos de teclado (numérico vs. e-mail).
 - **UX Refinada:** Melhorias no espaçamento (spacing system) e feedback visual em formulários.
 - **Correção de Formatação:** Melhoria na função `formatMonetary` para suportar entradas com vírgula e garantir o prefixo "R$ " corretamente.
