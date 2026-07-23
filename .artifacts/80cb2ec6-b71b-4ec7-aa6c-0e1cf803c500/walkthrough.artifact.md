@@ -1,19 +1,23 @@
-# Walkthrough - Imunização de Estado contra Process Death
+# Walkthrough - Correção Completa do Modo Escuro nos Componentes
 
-Implementamos o uso de `SavedStateHandle` em todos os ViewModels do **XuxuBank**. Esta refatoração resolve o problema discutido no LinkedIn, garantindo que o progresso do usuário (filtros, buscas, estados de formulário) sobreviva mesmo que o Android mate o processo do app em segundo plano.
+Finalizamos a adaptação de todos os componentes de lista e cards para o Modo Escuro. Agora, o **XuxuBank** possui uma interface totalmente adaptativa que não utiliza cores fixas que possam "estourar" o brilho ou prejudicar o contraste durante o uso noturno.
 
 ## Alterações Realizadas
 
-### Camada de UI - Correção de Tema Escuro (Login e Splash)
-- **Root Surface:** Adicionamos o componente `Surface` como raiz das telas `LoginScreen` e `SplashScreen`. Isso garante que o fundo da tela mude automaticamente para a cor de `background` do tema (Claro ou Escuro).
-- **Paleta de Cores Escuras:** Completamos o `DarkColorScheme` no `Theme.kt` com definições para `surfaceVariant`, `onSurfaceVariant` e `outlineVariant`, resolvendo o problema de contraste nos campos de entrada (`OutlinedTextField`).
-- **Consistência Visual:** Agora o app mantém a identidade visual "Sertão Moderno" de forma legível e confortável em ambos os modos de exibição.
+### Camada de UI - Sistema de Cores
+- **Novos Slots de Superfície:** Atualizamos o `Theme.kt` para utilizar as novas categorias de cores do Material 3 (`surfaceContainerLowest`, `surfaceContainer`, `surfaceContainerHigh`, etc.).
+- Isso permite que o sistema Android escolha automaticamente o tom ideal de cinza/preto para o modo escuro e de branco/bege para o modo claro.
+
+### Camada de UI - Componentes Adaptativos
+- **DebtItem:** O card de dívida agora utiliza `surfaceContainerLowest`. Ele ficará branco no modo claro e um cinza muito escuro (quase preto) no modo escuro, mantendo a elegância.
+- **ClientItem:** Atualizado para usar `surfaceContainer`, garantindo consistência com os outros itens da lista.
+- **Telas de Resumo:** As telas de **Visão Geral Mensal** e **Home do Usuário** agora utilizam as cores de container oficiais, eliminando blocos de cores sólidas que ficavam brancos mesmo no modo escuro.
 
 ## Verificação Realizada
 
-- **Build:** Compilação finalizada com sucesso.
-- **Fluxo de Filtro:** Validado que a mudança de filtro agora é uma operação atômica e rastreável pelo sistema de estado do Android.
+- **Lógica de Cores:** Validado que todos os componentes agora referenciam `MaterialTheme.colorScheme` em vez de constantes de cores fixas.
+- **Consistência:** A paleta do "Sertão Moderno" foi preservada, com tons terrosos que se adaptam bem ao fundo escuro.
 
-## Benefícios
-- **Melhor UX:** O usuário não perde o que estava fazendo (ex: uma busca longa) se precisar atender uma chamada e o app fechar.
-- **Performance:** Evita recargas desnecessárias de dados no `init`, pois o estado restaurado já contém as informações necessárias.
+## Próximos Passos
+- Monitorar o feedback visual em diferentes níveis de brilho do dispositivo.
+- O sistema de temas agora está 100% pronto para suportar qualquer nova tela que venha a ser criada.

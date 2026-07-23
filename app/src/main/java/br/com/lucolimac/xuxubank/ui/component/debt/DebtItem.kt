@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
 import br.com.lucolimac.xuxubank.domain.model.Debt
-import br.com.lucolimac.xuxubank.ui.theme.SurfaceContainerLowest
 import br.com.lucolimac.xuxubank.ui.util.FormatUtils
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,7 +33,7 @@ fun DebtItem(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
-            containerColor = SurfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {

@@ -28,10 +28,15 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = DarkOnBackground,
     surface = DarkSurface,
     onSurface = DarkOnSurface,
-    surfaceVariant = Color(0xFF4F4539), // Standard M3 dark variant
+    surfaceVariant = Color(0xFF4F4539),
     onSurfaceVariant = Color(0xFFD3C4B4),
     outline = Color(0xFF9C8F80),
-    outlineVariant = Color(0xFF4F4539)
+    outlineVariant = Color(0xFF4F4539),
+    surfaceContainerLowest = Color(0xFF0F0F0B),
+    surfaceContainerLow = Color(0xFF1C1C19),
+    surfaceContainer = Color(0xFF21211D),
+    surfaceContainerHigh = Color(0xFF2B2B27),
+    surfaceContainerHighest = Color(0xFF363632)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -55,7 +60,12 @@ private val LightColorScheme = lightColorScheme(
     onSurface = LightOnSurface,
     surfaceVariant = SurfaceContainerLow,
     onSurfaceVariant = OnSurfaceDark,
-    outlineVariant = SurfaceContainerHigh
+    outlineVariant = SurfaceContainerHigh,
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFF7F3EE),
+    surfaceContainer = Color(0xFFF1EDE8),
+    surfaceContainerHigh = Color(0xFFEBE6DF),
+    surfaceContainerHighest = Color(0xFFE0DBD4)
 )
 
 /**
