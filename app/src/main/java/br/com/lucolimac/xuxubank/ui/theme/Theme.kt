@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
@@ -27,6 +28,10 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = DarkOnBackground,
     surface = DarkSurface,
     onSurface = DarkOnSurface,
+    surfaceVariant = Color(0xFF4F4539), // Standard M3 dark variant
+    onSurfaceVariant = Color(0xFFD3C4B4),
+    outline = Color(0xFF9C8F80),
+    outlineVariant = Color(0xFF4F4539)
 )
 
 private val LightColorScheme = lightColorScheme(

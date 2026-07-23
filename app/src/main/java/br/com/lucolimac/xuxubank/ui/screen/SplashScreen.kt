@@ -3,6 +3,7 @@ package br.com.lucolimac.xuxubank.ui.screen
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,22 +36,27 @@ fun SplashScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    Column(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        color = MaterialTheme.colorScheme.background
     ) {
-        XuxuLogo(
-            modifier = Modifier.graphicsLayer(scaleX = scale, scaleY = scale)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 4.sp
-            ),
-            color = MaterialTheme.colorScheme.primary
-        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            XuxuLogo(
+                modifier = Modifier.graphicsLayer(scaleX = scale, scaleY = scale)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 4.sp
+                ),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }

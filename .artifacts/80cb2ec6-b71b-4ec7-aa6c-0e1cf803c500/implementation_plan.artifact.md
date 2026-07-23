@@ -1,46 +1,34 @@
-# Implementação de Arquitetura Offline-First (Room + Firestore)
+# Ajuste de Tema Escuro (Dark Mode) na Tela de Login
 
-O objetivo é transformar os repositórios em "Sincronizadores". O fluxo será: **UI -> Room (Instantâneo) -> Firestore (Sincronização em segundo plano)**. Isso resolve a sensação de "só local" dando controle total sobre o que está sincronizado.
+O objetivo é garantir que a `LoginScreen` e a `SplashScreen` respeitem o tema escuro do sistema de forma consistente, corrigindo problemas de legibilidade onde elementos escuros aparecem sobre fundos claros (ou vice-versa).
 
 ## User Review Required
 
 > [!IMPORTANT]
-> A principal mudança será a criação de repositórios híbridos que coordenam a persistência local (Room) e a remota (Firestore). O Room será a "Single Source of Truth" para a UI.
+> Vou adicionar um componente `Surface` como raiz das telas de Login e Splash. No Compose, isso é essencial para que o fundo da tela mude automaticamente para a cor de `background` do tema selecionado (Claro ou Escuro). Também completarei a paleta de cores escuras no `Theme.kt`.
 
 ## Proposed Changes
 
-### Camada de Dados - DAOs
+### Camada de UI - Temas
 
-#### [MODIFY] [ClientDao.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/local/dao/ClientDao.kt)
-- Adicionar `insertClients(clients: List<ClientEntity>)` para sincronização em lote.
+#### [MODIFY] [Theme.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/ui/theme/Theme.kt)
+- Adicionar definições para `surfaceVariant`, `onSurfaceVariant` e `outlineVariant` no `DarkColorScheme`. Isso garante que componentes como `OutlinedTextField` fiquem visíveis no modo escuro.
 
-#### [MODIFY] [DebtDao.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/local/dao/DebtDao.kt)
-- Adicionar `insertDebts(debts: List<DebtEntity>)` para sincronização em lote.
+### Camada de UI - Telas
 
-#### [MODIFY] [UserDao.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/local/dao/UserDao.kt)
-- Adicionar `insertUsers(users: List<UserEntity>)`.
+#### [MODIFY] [LoginScreen.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/ui/screen/LoginScreen.kt)
+- Envolver o conteúdo principal em um `Surface` com a cor de fundo do tema.
+- Garantir que não existam cores hardcoded (estilo `Color.Black`) que possam quebrar o contraste.
 
-### Camada de Dados - Repositórios Híbridos
-
-#### [NEW] [ClientRepositoryHybridImpl.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/repository/ClientRepositoryHybridImpl.kt)
-- Implementar lógica híbrida com `SnapshotListener` para manter o Room atualizado com o Firestore.
-
-#### [NEW] [DebtRepositoryHybridImpl.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/repository/DebtRepositoryHybridImpl.kt)
-- Implementar lógica híbrida para dívidas.
-
-#### [NEW] [UserRepositoryHybridImpl.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/data/repository/UserRepositoryHybridImpl.kt)
-- Implementar lógica híbrida para sessão do usuário.
-
-### Injeção de Dependência
-
-#### [MODIFY] [AppModule.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/di/AppModule.kt)
-- Atualizar Koin para injetar as novas implementações híbridas.
+#### [MODIFY] [SplashScreen.kt](file:///Users/lucasomac/StudioProjects/XuxuBank/app/src/main/java/br/com/lucolimac/xuxubank/ui/screen/SplashScreen.kt)
+- Adicionar um `Surface` para garantir que a transição do Splash para o Login seja suave visualmente.
 
 ## Verification Plan
 
 ### Automated Tests
-- Executar `./gradlew assembleDebug` para garantir que a injeção de dependência e os tipos estão corretos.
+- Executar `./gradlew assembleDebug` para validar a compilação.
 
 ### Manual Verification
-- Testar login e criação de cliente/dívida com e sem internet.
-- Validar se os dados aparecem no Console do Firebase após a sincronização.
+- Alternar o celular entre Modo Claro e Modo Escuro na tela de Login.
+- Verificar se o texto "E-mail ou Telefone" e as instruções estão legíveis em ambos os modos.
+- Garantir que o fundo da tela mude de branco (Light) para grafite/preto (Dark).

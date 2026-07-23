@@ -4,19 +4,10 @@ Implementamos o uso de `SavedStateHandle` em todos os ViewModels do **XuxuBank**
 
 ## Alterações Realizadas
 
-### Camada de UI - ViewModels Resilientes
-- **SavedStateHandle:** Injetado nos ViewModels `UserViewModel`, `ClientViewModel` e `DebtViewModel`.
-- **Filtros Preservados:**
-    - No `ClientViewModel`, implementamos a preservação do texto de busca (`searchQuery`).
-    - No `DebtViewModel`, implementamos a preservação do status de filtro selecionado (`filterStatus`).
-- **Padrão Imortal:** Ao usar `savedStateHandle.getStateFlow()`, o estado já nasce restaurado caso o app tenha sido recreado pelo sistema.
-
-### Funcionalidades Adicionais
-- **Busca de Clientes:** Aproveitamos a refatoração para adicionar uma barra de busca na lista de clientes, permitindo filtrar por nome em tempo real.
-- **Lógica de Combinação:** Utilizamos o operador `combine` do Kotlin Flow para que a UI reaja instantaneamente tanto a mudanças no banco de dados quanto a mudanças no filtro do usuário.
-
-### Injeção de Dependência
-- O **Koin** foi configurado para injetar automaticamente o `SavedStateHandle` em cada ViewModel, sem necessidade de boilerplate adicional nas Activities/Screens.
+### Camada de UI - Correção de Tema Escuro (Login e Splash)
+- **Root Surface:** Adicionamos o componente `Surface` como raiz das telas `LoginScreen` e `SplashScreen`. Isso garante que o fundo da tela mude automaticamente para a cor de `background` do tema (Claro ou Escuro).
+- **Paleta de Cores Escuras:** Completamos o `DarkColorScheme` no `Theme.kt` com definições para `surfaceVariant`, `onSurfaceVariant` e `outlineVariant`, resolvendo o problema de contraste nos campos de entrada (`OutlinedTextField`).
+- **Consistência Visual:** Agora o app mantém a identidade visual "Sertão Moderno" de forma legível e confortável em ambos os modos de exibição.
 
 ## Verificação Realizada
 

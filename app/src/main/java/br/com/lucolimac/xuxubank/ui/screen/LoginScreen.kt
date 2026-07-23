@@ -42,85 +42,90 @@ fun LoginScreen(
     val loginButtonA11y = stringResource(R.string.login_button_a11y)
     val loadingA11y = stringResource(R.string.loading_a11y)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .semantics { contentDescription = loginScreenA11y },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Text(
-            text = stringResource(R.string.welcome_message),
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            text = stringResource(R.string.login_instruction),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        
-        Spacer(modifier = Modifier.height(56.dp))
-        
-        OutlinedTextField(
-            value = identifier,
-            onValueChange = { 
-                identifier = it
-                if (loginState is LoginUIState.Error) onResetError()
-            },
-            label = { Text(stringResource(R.string.email_or_phone)) },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .semantics { contentDescription = clientAccessInputA11y },
-            singleLine = true,
-            isError = loginState is LoginUIState.Error,
-            supportingText = {
-                if (loginState is LoginUIState.Error) {
-                    Text(text = stringResource(loginState.messageRes), color = MaterialTheme.colorScheme.error)
-                } else {
-                    Text(text = stringResource(R.string.phone_mask_hint))
-                }
-            },
-            visualTransformation = if (shouldApplyPhoneMask) PhoneVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            shape = MaterialTheme.shapes.medium
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        Button(
-            onClick = { onLogin(identifier) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp) // Enhanced touch target height
-                .semantics { contentDescription = loginButtonA11y },
-            enabled = isValid && loginState !is LoginUIState.Loading,
-            shape = MaterialTheme.shapes.large
-        ) {
-            if (loginState is LoginUIState.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp).semantics { contentDescription = loadingA11y },
-                    strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            } else {
-                Text(stringResource(R.string.login), style = MaterialTheme.typography.titleMedium)
-            }
-        }
-
-        // Demo Helper for Manager
-        Spacer(modifier = Modifier.height(40.dp))
-        TextButton(
-            onClick = { onLogin("xuxu@xuxubank.com.br") },
-            modifier = Modifier.minimumInteractiveComponentSize() // Ensures 48dp touch target
+                .fillMaxSize()
+                .padding(24.dp)
+                .semantics { contentDescription = loginScreenA11y },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.login_manager_demo),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.secondary
+                text = stringResource(R.string.welcome_message),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.primary
             )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(R.string.login_instruction),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Spacer(modifier = Modifier.height(56.dp))
+            
+            OutlinedTextField(
+                value = identifier,
+                onValueChange = { 
+                    identifier = it
+                    if (loginState is LoginUIState.Error) onResetError()
+                },
+                label = { Text(stringResource(R.string.email_or_phone)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = clientAccessInputA11y },
+                singleLine = true,
+                isError = loginState is LoginUIState.Error,
+                supportingText = {
+                    if (loginState is LoginUIState.Error) {
+                        Text(text = stringResource(loginState.messageRes), color = MaterialTheme.colorScheme.error)
+                    } else {
+                        Text(text = stringResource(R.string.phone_mask_hint))
+                    }
+                },
+                visualTransformation = if (shouldApplyPhoneMask) PhoneVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                shape = MaterialTheme.shapes.medium
+            )
+            
+            Spacer(modifier = Modifier.height(32.dp))
+            
+            Button(
+                onClick = { onLogin(identifier) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp) // Enhanced touch target height
+                    .semantics { contentDescription = loginButtonA11y },
+                enabled = isValid && loginState !is LoginUIState.Loading,
+                shape = MaterialTheme.shapes.large
+            ) {
+                if (loginState is LoginUIState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp).semantics { contentDescription = loadingA11y },
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text(stringResource(R.string.login), style = MaterialTheme.typography.titleMedium)
+                }
+            }
+
+            // Demo Helper for Manager
+            Spacer(modifier = Modifier.height(40.dp))
+            TextButton(
+                onClick = { onLogin("xuxu@xuxubank.com.br") },
+                modifier = Modifier.minimumInteractiveComponentSize() // Ensures 48dp touch target
+            ) {
+                Text(
+                    text = stringResource(R.string.login_manager_demo),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
         }
     }
 }
