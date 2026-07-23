@@ -84,9 +84,7 @@ fun LoginScreen(
                 }
             },
             visualTransformation = if (shouldApplyPhoneMask) PhoneVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = if (containsLetters || isEmail) KeyboardType.Email else KeyboardType.Number
-            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             shape = MaterialTheme.shapes.medium
         )
         

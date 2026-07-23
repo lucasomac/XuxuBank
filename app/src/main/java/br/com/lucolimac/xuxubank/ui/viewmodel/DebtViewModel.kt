@@ -1,5 +1,6 @@
 package br.com.lucolimac.xuxubank.ui.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
@@ -7,12 +8,29 @@ import br.com.lucolimac.xuxubank.domain.model.Debt
 import br.com.lucolimac.xuxubank.domain.usecase.ManageDebtUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
-class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewModel() {
+class DebtViewModel(
+    private val manageDebtUseCase: ManageDebtUseCase,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    companion object {
+        private const val FILTER_STATUS_KEY = "debt_filter_status"
+    }
+
+    /**
+     * Preserves filter selection across process death.
+     */
+    val filterStatus = savedStateHandle.getStateFlow<DebtStatus?>(FILTER_STATUS_KEY, null)
+
+    /**
+     * Combines multiple flows to produce a resilient and filtered UI State.
+     */
     val allDebts: StateFlow<List<Debt>> = manageDebtUseCase.getAllDebts()
         .map { list ->
             val now = System.currentTimeMillis()
@@ -24,7 +42,14 @@ class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewMode
                 }
             }
         }
+        .combine(filterStatus) { debts, filter ->
+            if (filter == null) debts else debts.filter { it.status == filter }
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun updateFilter(status: DebtStatus?) {
+        savedStateHandle[FILTER_STATUS_KEY] = status
+    }
 
     fun saveDebt(
         clientId: String,

@@ -12,6 +12,8 @@
     <string name="clients_management">Gerenciamento de Clientes</string>
     <string name="monthly_overview">Visão Geral Mensal</string>
     <string name="no_clients">Nenhum cliente cadastrado ainda.</string>
+    <string name="no_clients_found">Nenhum cliente encontrado para esta busca.</string>
+    <string name="search_clients">Buscar clientes…</string>
     <string name="add_client">Adicionar Cliente</string>
     <string name="client_details">Detalhes do Cliente</string>
     <string name="debt_history">Histórico de Dívidas</string>

@@ -1,11 +1,14 @@
 package br.com.lucolimac.xuxubank.ui.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +21,8 @@ import br.com.lucolimac.xuxubank.ui.component.ClientItem
 @Composable
 fun ClientListScreen(
     clients: List<Client>,
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
     onClientClick: (Client) -> Unit,
     onAddClient: () -> Unit
 ) {
@@ -28,21 +33,35 @@ fun ClientListScreen(
             }
         }
     ) { innerPadding ->
-        if (clients.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_clients),
-                modifier = Modifier.padding(innerPadding).padding(16.dp),
-                style = MaterialTheme.typography.bodyLarge
+        Column(modifier = Modifier.padding(innerPadding)) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text(stringResource(R.string.search_clients)) },
+                leadingIcon = { Icon(Icons.Default.Search, null) },
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium
             )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(innerPadding)
-            ) {
-                items(clients) { client ->
-                    ClientItem(
-                        client = client,
-                        onClick = { onClientClick(client) }
-                    )
+
+            if (clients.isEmpty()) {
+                Text(
+                    text = if (searchQuery.isBlank()) stringResource(R.string.no_clients) else stringResource(R.string.no_clients_found),
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(clients) { client ->
+                        ClientItem(
+                            client = client,
+                            onClick = { onClientClick(client) }
+                        )
+                    }
                 }
             }
         }

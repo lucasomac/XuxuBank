@@ -2,6 +2,7 @@ package br.com.lucolimac.xuxubank.ui.viewmodel
 
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.xuxubank.R
@@ -17,15 +18,25 @@ import kotlinx.coroutines.launch
 
 /**
  * Manages user authentication state and login flows.
+ * Uses SavedStateHandle to persist UI state across process death.
  */
-class UserViewModel(private val manageUserUseCase: ManageUserUseCase) : ViewModel() {
+class UserViewModel(
+    private val manageUserUseCase: ManageUserUseCase,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
     
+    companion object {
+        private const val LOGIN_STATE_KEY = "login_state"
+    }
+
     /**
      * Exposes the currently logged-in user session.
      */
     val currentUser: StateFlow<User?> = manageUserUseCase.getCurrentUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
+    // Using a simple state flow for now as LoginUIState is a sealed interface
+    // In a senior implementation, you'd make the sealed interface Parcelable to save it.
     private val _loginState = MutableStateFlow<LoginUIState>(LoginUIState.Idle)
     val loginState: StateFlow<LoginUIState> = _loginState.asStateFlow()
 

@@ -33,13 +33,11 @@ fun MonthlyOverviewScreen(
     debtViewModel: DebtViewModel
 ) {
     val debts by debtViewModel.allDebts.collectAsState()
-    var filterStatus by remember { mutableStateOf<DebtStatus?>(null) }
+    val filterStatus by debtViewModel.filterStatus.collectAsState()
     var showFilterMenu by remember { mutableStateOf(false) }
 
-    // Using remember for derived states to ensure reactivity and performance
-    val filteredDebts = remember(debts, filterStatus) {
-        if (filterStatus == null) debts else debts.filter { it.status == filterStatus }
-    }
+    // Logic moved to ViewModel for better resilience
+    val filteredDebts = debts
     
     // New calculations for the requested summaries using BigDecimal
     val overallTotalReceivable = remember(debts) {
@@ -129,7 +127,7 @@ fun MonthlyOverviewScreen(
                 ) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.all)) },
-                        onClick = { filterStatus = null; showFilterMenu = false }
+                        onClick = { debtViewModel.updateFilter(null); showFilterMenu = false }
                     )
                     DebtStatus.entries.forEach { status ->
                         val itemDisplayName = when(status) {
@@ -139,7 +137,7 @@ fun MonthlyOverviewScreen(
                         }
                         DropdownMenuItem(
                             text = { Text(itemDisplayName) },
-                            onClick = { filterStatus = status; showFilterMenu = false }
+                            onClick = { debtViewModel.updateFilter(status); showFilterMenu = false }
                         )
                     }
                 }

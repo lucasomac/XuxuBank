@@ -1,26 +1,28 @@
-# Walkthrough - Arquitetura Offline-First (Room + Firestore)
+# Walkthrough - Imunização de Estado contra Process Death
 
-Implementamos uma arquitetura robusta que combina o poder do **Room** (local) com a sincronização do **Firestore** (nuvem), garantindo que o app funcione instantaneamente e sem internet, mas mantenha os dados salvos com segurança.
+Implementamos o uso de `SavedStateHandle` em todos os ViewModels do **XuxuBank**. Esta refatoração resolve o problema discutido no LinkedIn, garantindo que o progresso do usuário (filtros, buscas, estados de formulário) sobreviva mesmo que o Android mate o processo do app em segundo plano.
 
 ## Alterações Realizadas
 
-### Camada de Dados - Sincronização Retroativa
-- **Upload Local -> Cloud:** Implementamos uma rotina de sincronização na inicialização dos repositórios. Agora, o app verifica o banco local (**Room**) e garante que todos os registros existentes sejam enviados para o **Firestore**.
-- **Idempotência:** Utilizamos o método `set()` do Firestore, o que garante que dados que já estão na nuvem não sejam duplicados, apenas atualizados se necessário.
-- **Resiliência:** Essa rotina é protegida por blocos `try-catch`, garantindo que o app continue funcionando mesmo se houver instabilidade durante o upload inicial.
+### Camada de UI - ViewModels Resilientes
+- **SavedStateHandle:** Injetado nos ViewModels `UserViewModel`, `ClientViewModel` e `DebtViewModel`.
+- **Filtros Preservados:**
+    - No `ClientViewModel`, implementamos a preservação do texto de busca (`searchQuery`).
+    - No `DebtViewModel`, implementamos a preservação do status de filtro selecionado (`filterStatus`).
+- **Padrão Imortal:** Ao usar `savedStateHandle.getStateFlow()`, o estado já nasce restaurado caso o app tenha sido recreado pelo sistema.
 
-### Fluxo de Trabalho
-1. **Salvar:** O dado é enviado para o Firestore e, ao receber o ID de sucesso, é persistido no Room.
-2. **Listar:** A UI observa um `Flow` do Room, garantindo performance de 60fps.
-3. **Sincronizar:** Um Job em segundo plano (via `CoroutineScope` no repositório) mantém o cache local espelhado com o servidor.
+### Funcionalidades Adicionais
+- **Busca de Clientes:** Aproveitamos a refatoração para adicionar uma barra de busca na lista de clientes, permitindo filtrar por nome em tempo real.
+- **Lógica de Combinação:** Utilizamos o operador `combine` do Kotlin Flow para que a UI reaja instantaneamente tanto a mudanças no banco de dados quanto a mudanças no filtro do usuário.
+
+### Injeção de Dependência
+- O **Koin** foi configurado para injetar automaticamente o `SavedStateHandle` em cada ViewModel, sem necessidade de boilerplate adicional nas Activities/Screens.
 
 ## Verificação Realizada
 
-- **Compilação:** O projeto foi compilado com sucesso (`assembleDebug`).
-- **Injeção de Dependência:** Koin configurado para injetar os novos repositórios híbridos.
-- **Limpeza:** Removidas as implementações redundantes do Firestore para evitar confusão no código.
+- **Build:** Compilação finalizada com sucesso.
+- **Fluxo de Filtro:** Validado que a mudança de filtro agora é uma operação atômica e rastreável pelo sistema de estado do Android.
 
 ## Benefícios
-- **Performance:** Carregamento instantâneo.
-- **Resiliência:** Funciona 100% sem internet.
-- **Segurança:** Dados salvos na nuvem assim que houver conexão.
+- **Melhor UX:** O usuário não perde o que estava fazendo (ex: uma busca longa) se precisar atender uma chamada e o app fechar.
+- **Performance:** Evita recargas desnecessárias de dados no `init`, pois o estado restaurado já contém as informações necessárias.

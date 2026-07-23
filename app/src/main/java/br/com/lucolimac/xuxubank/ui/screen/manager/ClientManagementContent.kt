@@ -66,8 +66,11 @@ fun ClientManagementContent(
                     }
                 )
             ) {
+                val searchQuery by clientViewModel.searchQuery.collectAsState()
                 ClientListScreen(
                     clients = clients,
+                    searchQuery = searchQuery,
+                    onSearchQueryChange = { clientViewModel.updateSearchQuery(it) },
                     onClientClick = { client ->
                         backStack.add(NavRoute.ClientDetail(client.id))
                     },

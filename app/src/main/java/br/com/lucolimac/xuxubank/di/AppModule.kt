@@ -54,7 +54,7 @@ val appModule = module {
     factory { ManageDebtUseCase(get()) }
 
     // UI ViewModels
-    viewModel { UserViewModel(get()) }
-    viewModel { ClientViewModel(get()) }
-    viewModel { DebtViewModel(get()) }
+    viewModel { UserViewModel(get(), get()) }
+    viewModel { ClientViewModel(get(), get()) }
+    viewModel { DebtViewModel(get(), get()) }
 }
