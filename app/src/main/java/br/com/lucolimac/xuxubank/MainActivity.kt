@@ -14,6 +14,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import br.com.lucolimac.xuxubank.data.local.entity.UserRole
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.ui.navigation.NavRoute
 import br.com.lucolimac.xuxubank.ui.screen.LoginScreen
 import br.com.lucolimac.xuxubank.ui.screen.ManagerHomeScreen

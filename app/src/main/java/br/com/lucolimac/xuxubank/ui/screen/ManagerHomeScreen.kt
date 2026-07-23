@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.ui.screen.manager.ClientManagementContent
 import br.com.lucolimac.xuxubank.ui.viewmodel.ClientViewModel
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
@@ -24,7 +24,7 @@ import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ManagerHomeScreen(
-    user: UserEntity,
+    user: User,
     onLogout: () -> Unit,
     clientViewModel: ClientViewModel,
     debtViewModel: DebtViewModel

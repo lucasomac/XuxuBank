@@ -1,7 +1,7 @@
 package br.com.lucolimac.xuxubank.data.remote
 
-import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
 import br.com.lucolimac.xuxubank.data.local.entity.UserRole
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.domain.repository.UserRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,10 +16,10 @@ class UserRepositoryFirestoreImpl(
 
     private val usersCollection = firestore.collection("sessions")
 
-    private fun DocumentSnapshot.toUserEntity(): UserEntity? {
+    private fun DocumentSnapshot.toUser(): User? {
         return try {
             val data = this.data ?: return null
-            UserEntity(
+            User(
                 id = this.id,
                 name = data["name"] as? String ?: "",
                 role = UserRole.valueOf(data["role"] as? String ?: UserRole.CLIENT.name),
@@ -30,7 +30,7 @@ class UserRepositoryFirestoreImpl(
         }
     }
 
-    private fun UserEntity.toFirestoreMap(): Map<String, Any?> {
+    private fun User.toFirestoreMap(): Map<String, Any?> {
         return mapOf(
             "name" to name,
             "role" to role.name,
@@ -38,22 +38,22 @@ class UserRepositoryFirestoreImpl(
         )
     }
 
-    override fun getAllUsers(): Flow<List<UserEntity>> {
+    override fun getAllUsers(): Flow<List<User>> {
         return usersCollection.snapshots().map { snapshot ->
-            snapshot.documents.mapNotNull { it.toUserEntity() }
+            snapshot.documents.mapNotNull { it.toUser() }
         }
     }
 
-    override suspend fun getUserById(id: String): UserEntity? {
+    override suspend fun getUserById(id: String): User? {
         return try {
             val doc = usersCollection.document(id).get().await()
-            doc.toUserEntity()
+            doc.toUser()
         } catch (e: Exception) {
             null
         }
     }
 
-    override suspend fun saveUser(user: UserEntity) {
+    override suspend fun saveUser(user: User) {
         val data = user.toFirestoreMap()
         if (user.id.isBlank()) {
             usersCollection.add(data).await()
@@ -62,7 +62,7 @@ class UserRepositoryFirestoreImpl(
         }
     }
 
-    override suspend fun deleteUser(user: UserEntity) {
+    override suspend fun deleteUser(user: User) {
         usersCollection.document(user.id).delete().await()
     }
 }

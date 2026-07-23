@@ -1,7 +1,7 @@
 package br.com.lucolimac.xuxubank.domain.usecase
 
-import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
 import br.com.lucolimac.xuxubank.data.local.entity.UserRole
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.domain.repository.ClientRepository
 import br.com.lucolimac.xuxubank.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +24,7 @@ class ManageUserUseCase(
     /**
      * Observes the active user session.
      */
-    fun getCurrentUser(): Flow<UserEntity?> = userRepository.getAllUsers().map { it.firstOrNull() }
+    fun getCurrentUser(): Flow<User?> = userRepository.getAllUsers().map { it.firstOrNull() }
 
     /**
      * Unified login logic:
@@ -36,7 +36,7 @@ class ManageUserUseCase(
     suspend fun login(identifier: String): LoginResult {
         // 1. Check for Manager
         if (identifier.equals(MANAGER_IDENTIFIER, ignoreCase = true)) {
-            val manager = UserEntity(id = "1", name = MANAGER_NAME, role = UserRole.MANAGER)
+            val manager = User(id = "1", name = MANAGER_NAME, role = UserRole.MANAGER, clientId = null)
             userRepository.saveUser(manager)
             return LoginResult.Success(UserRole.MANAGER)
         }
@@ -44,7 +44,7 @@ class ManageUserUseCase(
         // 2. Check for Client
         val client = clientRepository.getClientByIdentifier(identifier)
         return if (client != null) {
-            val user = UserEntity(
+            val user = User(
                 id = "1", 
                 name = client.name, 
                 role = UserRole.CLIENT, 

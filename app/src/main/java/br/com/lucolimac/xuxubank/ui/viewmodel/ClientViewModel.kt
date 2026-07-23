@@ -2,7 +2,7 @@ package br.com.lucolimac.xuxubank.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.domain.model.Client
 import br.com.lucolimac.xuxubank.domain.usecase.ManageClientUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ class ClientViewModel(private val manageClientUseCase: ManageClientUseCase) : Vi
     /**
      * Observable state of all clients for the Manager dashboard.
      */
-    val allClients: StateFlow<List<ClientEntity>> = manageClientUseCase.getAllClients()
+    val allClients: StateFlow<List<Client>> = manageClientUseCase.getAllClients()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun saveClient(name: String, email: String, phone: String) {
@@ -26,9 +26,9 @@ class ClientViewModel(private val manageClientUseCase: ManageClientUseCase) : Vi
         }
     }
 
-    fun updateClient(client: ClientEntity) {
+    fun updateClient(client: Client) {
         viewModelScope.launch {
-            manageClientUseCase.updateClient(client.id, client.name, client.email, client.phone)
+            manageClientUseCase.updateClient(client)
         }
     }
 

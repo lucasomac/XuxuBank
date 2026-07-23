@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
-import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.ui.component.debt.DebtItem
 import br.com.lucolimac.xuxubank.ui.util.FormatUtils
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
@@ -27,7 +27,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(
-    user: UserEntity, onLogout: () -> Unit, debtViewModel: DebtViewModel
+    user: User, onLogout: () -> Unit, debtViewModel: DebtViewModel
 ) {
     val allDebts by debtViewModel.allDebts.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.UserEntity
+import br.com.lucolimac.xuxubank.domain.model.User
 import br.com.lucolimac.xuxubank.domain.usecase.LoginResult
 import br.com.lucolimac.xuxubank.domain.usecase.ManageUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class UserViewModel(private val manageUserUseCase: ManageUserUseCase) : ViewMode
     /**
      * Exposes the currently logged-in user session.
      */
-    val currentUser: StateFlow<UserEntity?> = manageUserUseCase.getCurrentUser()
+    val currentUser: StateFlow<User?> = manageUserUseCase.getCurrentUser()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _loginState = MutableStateFlow<LoginUIState>(LoginUIState.Idle)

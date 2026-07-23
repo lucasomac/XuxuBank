@@ -13,7 +13,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.domain.model.Client
 import br.com.lucolimac.xuxubank.ui.util.PhoneVisualTransformation
 import br.com.lucolimac.xuxubank.ui.util.ValidationUtils
 
@@ -23,7 +23,7 @@ import br.com.lucolimac.xuxubank.ui.util.ValidationUtils
  */
 @Composable
 fun ClientFormScreen(
-    client: ClientEntity? = null,
+    client: Client? = null,
     onSave: (String, String, String) -> Unit,
     onCancel: () -> Unit,
     onDelete: (() -> Unit)? = null

@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.domain.model.Client
 
 /**
  * Stylized Client Card using Material3 components.
@@ -19,7 +19,7 @@ import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
  */
 @Composable
 fun ClientItem(
-    client: ClientEntity,
+    client: Client,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

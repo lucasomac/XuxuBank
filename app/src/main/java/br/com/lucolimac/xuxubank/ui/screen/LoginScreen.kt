@@ -110,7 +110,7 @@ fun LoginScreen(
         // Demo Helper for Manager
         Spacer(modifier = Modifier.height(40.dp))
         TextButton(
-            onClick = { onLogin("admin@xuxubank.com") },
+            onClick = { onLogin("xuxu@xuxubank.com.br") },
             modifier = Modifier.minimumInteractiveComponentSize() // Ensures 48dp touch target
         ) {
             Text(

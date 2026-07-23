@@ -13,13 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.domain.model.Client
 import br.com.lucolimac.xuxubank.ui.component.debt.DebtItem
 import br.com.lucolimac.xuxubank.ui.viewmodel.DebtViewModel
 
 @Composable
 fun ClientDetailWithDebts(
-    client: ClientEntity,
+    client: Client,
     debtViewModel: DebtViewModel,
     onAddDebt: () -> Unit,
     onEditClient: () -> Unit,

@@ -11,7 +11,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
+import br.com.lucolimac.xuxubank.domain.model.Debt
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +24,7 @@ import java.util.*
 fun DebtFormScreen(
     clientId: String,
     clientName: String,
-    debt: DebtEntity? = null,
+    debt: Debt? = null,
     onSave: (String, String, BigDecimal, Long?, Int) -> Unit,
     onCancel: () -> Unit
 ) {

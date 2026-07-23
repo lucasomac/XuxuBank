@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import br.com.lucolimac.xuxubank.R
-import br.com.lucolimac.xuxubank.data.local.entity.ClientEntity
+import br.com.lucolimac.xuxubank.domain.model.Client
 import br.com.lucolimac.xuxubank.ui.component.ClientItem
 
 @Composable
 fun ClientListScreen(
-    clients: List<ClientEntity>,
-    onClientClick: (ClientEntity) -> Unit,
+    clients: List<Client>,
+    onClientClick: (Client) -> Unit,
     onAddClient: () -> Unit
 ) {
     Scaffold(

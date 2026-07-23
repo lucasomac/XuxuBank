@@ -1,7 +1,7 @@
 package br.com.lucolimac.xuxubank.data.remote
 
-import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
+import br.com.lucolimac.xuxubank.domain.model.Debt
 import br.com.lucolimac.xuxubank.domain.repository.DebtRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,10 +17,10 @@ class DebtRepositoryFirestoreImpl(
 
     private val debtsCollection = firestore.collection("debts")
 
-    private fun DocumentSnapshot.toDebtEntity(): DebtEntity? {
+    private fun DocumentSnapshot.toDebt(): Debt? {
         return try {
             val data = this.data ?: return null
-            DebtEntity(
+            Debt(
                 id = this.id,
                 clientId = data["clientId"] as? String ?: "",
                 description = data["description"] as? String ?: "",
@@ -36,7 +36,7 @@ class DebtRepositoryFirestoreImpl(
         }
     }
 
-    private fun DebtEntity.toFirestoreMap(): Map<String, Any?> {
+    private fun Debt.toFirestoreMap(): Map<String, Any?> {
         return mapOf(
             "clientId" to clientId,
             "description" to description,
@@ -49,34 +49,34 @@ class DebtRepositoryFirestoreImpl(
         )
     }
 
-    override fun getAllDebts(): Flow<List<DebtEntity>> {
+    override fun getAllDebts(): Flow<List<Debt>> {
         return debtsCollection.snapshots().map { snapshot ->
-            snapshot.documents.mapNotNull { it.toDebtEntity() }
+            snapshot.documents.mapNotNull { it.toDebt() }
         }
     }
 
-    override fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>> {
+    override fun getDebtsByClient(clientId: String): Flow<List<Debt>> {
         return debtsCollection.whereEqualTo("clientId", clientId).snapshots().map { snapshot ->
-            snapshot.documents.mapNotNull { it.toDebtEntity() }
+            snapshot.documents.mapNotNull { it.toDebt() }
         }
     }
 
-    override fun getDebtsByStatus(status: DebtStatus): Flow<List<DebtEntity>> {
+    override fun getDebtsByStatus(status: DebtStatus): Flow<List<Debt>> {
         return debtsCollection.whereEqualTo("status", status.name).snapshots().map { snapshot ->
-            snapshot.documents.mapNotNull { it.toDebtEntity() }
+            snapshot.documents.mapNotNull { it.toDebt() }
         }
     }
 
-    override suspend fun getDebtById(id: String): DebtEntity? {
+    override suspend fun getDebtById(id: String): Debt? {
         return try {
             val doc = debtsCollection.document(id).get().await()
-            doc.toDebtEntity()
+            doc.toDebt()
         } catch (e: Exception) {
             null
         }
     }
 
-    override suspend fun saveDebt(debt: DebtEntity) {
+    override suspend fun saveDebt(debt: Debt) {
         val data = debt.toFirestoreMap()
         if (debt.id.isBlank()) {
             debtsCollection.add(data).await()
@@ -85,11 +85,11 @@ class DebtRepositoryFirestoreImpl(
         }
     }
 
-    override suspend fun updateDebt(debt: DebtEntity) {
+    override suspend fun updateDebt(debt: Debt) {
         debtsCollection.document(debt.id).set(debt.toFirestoreMap()).await()
     }
 
-    override suspend fun deleteDebt(debt: DebtEntity) {
+    override suspend fun deleteDebt(debt: Debt) {
         debtsCollection.document(debt.id).delete().await()
     }
 }

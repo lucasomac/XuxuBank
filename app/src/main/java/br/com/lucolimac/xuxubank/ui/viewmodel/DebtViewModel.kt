@@ -2,8 +2,8 @@ package br.com.lucolimac.xuxubank.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
+import br.com.lucolimac.xuxubank.domain.model.Debt
 import br.com.lucolimac.xuxubank.domain.usecase.ManageDebtUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewModel() {
-    val allDebts: StateFlow<List<DebtEntity>> = manageDebtUseCase.getAllDebts()
+    val allDebts: StateFlow<List<Debt>> = manageDebtUseCase.getAllDebts()
         .map { list ->
             val now = System.currentTimeMillis()
             list.map { debt ->
@@ -38,7 +38,7 @@ class DebtViewModel(private val manageDebtUseCase: ManageDebtUseCase) : ViewMode
         }
     }
 
-    fun updateDebt(debt: DebtEntity) {
+    fun updateDebt(debt: Debt) {
         viewModelScope.launch {
             manageDebtUseCase.updateDebt(debt)
         }

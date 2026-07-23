@@ -1,8 +1,6 @@
 package br.com.lucolimac.xuxubank.domain.usecase
 
-import br.com.lucolimac.xuxubank.data.local.entity.DebtEntity
 import br.com.lucolimac.xuxubank.data.local.entity.DebtStatus
-import br.com.lucolimac.xuxubank.data.local.toEntity
 import br.com.lucolimac.xuxubank.domain.model.Debt
 import br.com.lucolimac.xuxubank.domain.repository.DebtRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +17,12 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
     /**
      * Retrieves all debts across all clients.
      */
-    fun getAllDebts(): Flow<List<DebtEntity>> = debtRepository.getAllDebts()
+    fun getAllDebts(): Flow<List<Debt>> = debtRepository.getAllDebts()
 
     /**
      * Filters debts for a specific client.
      */
-    fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>> = debtRepository.getDebtsByClient(clientId)
+    fun getDebtsByClient(clientId: String): Flow<List<Debt>> = debtRepository.getDebtsByClient(clientId)
 
     /**
      * Core logic for debt creation.
@@ -54,7 +52,7 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
                 currentInstallment = i,
                 createdAt = System.currentTimeMillis()
             )
-            debtRepository.saveDebt(debt.toEntity())
+            debtRepository.saveDebt(debt)
             
             if (firstDueDate != null) {
                 calendar.add(Calendar.MONTH, 1)
@@ -62,7 +60,7 @@ class ManageDebtUseCase(private val debtRepository: DebtRepository) {
         }
     }
 
-    suspend fun updateDebt(debt: DebtEntity) {
+    suspend fun updateDebt(debt: Debt) {
         debtRepository.updateDebt(debt)
     }
 
