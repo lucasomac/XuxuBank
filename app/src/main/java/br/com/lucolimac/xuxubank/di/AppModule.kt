@@ -2,9 +2,9 @@ package br.com.lucolimac.xuxubank.di
 
 import androidx.room.Room
 import br.com.lucolimac.xuxubank.data.local.XuxuDatabase
-import br.com.lucolimac.xuxubank.data.remote.ClientRepositoryFirestoreImpl
-import br.com.lucolimac.xuxubank.data.remote.DebtRepositoryFirestoreImpl
-import br.com.lucolimac.xuxubank.data.remote.UserRepositoryFirestoreImpl
+import br.com.lucolimac.xuxubank.data.repository.ClientRepositoryImpl
+import br.com.lucolimac.xuxubank.data.repository.DebtRepositoryImpl
+import br.com.lucolimac.xuxubank.data.repository.UserRepositoryImpl
 import br.com.lucolimac.xuxubank.domain.repository.DebtRepository
 import br.com.lucolimac.xuxubank.domain.repository.ClientRepository
 import br.com.lucolimac.xuxubank.domain.repository.UserRepository
@@ -43,10 +43,10 @@ val appModule = module {
     // Firebase Firestore
     single { Firebase.firestore }
 
-    // Repository implementations (Migrated to Firestore)
-    single<UserRepository> { UserRepositoryFirestoreImpl(get()) }
-    single<ClientRepository> { ClientRepositoryFirestoreImpl(get()) }
-    single<DebtRepository> { DebtRepositoryFirestoreImpl(get()) }
+    // Repository implementations (Hybrid Offline-First)
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<ClientRepository> { ClientRepositoryImpl(get(), get()) }
+    single<DebtRepository> { DebtRepositoryImpl(get(), get()) }
 
     // Use Case factories
     factory { ManageUserUseCase(get(), get()) }
