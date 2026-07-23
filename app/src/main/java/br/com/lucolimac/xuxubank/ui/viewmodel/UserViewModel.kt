@@ -1,5 +1,6 @@
 package br.com.lucolimac.xuxubank.ui.viewmodel
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,13 +35,18 @@ class UserViewModel(private val manageUserUseCase: ManageUserUseCase) : ViewMode
     fun login(identifier: String) {
         viewModelScope.launch {
             _loginState.value = LoginUIState.Loading
-            when (manageUserUseCase.login(identifier)) {
-                is LoginResult.Success -> {
-                    _loginState.value = LoginUIState.Success
+            try {
+                when (manageUserUseCase.login(identifier)) {
+                    is LoginResult.Success -> {
+                        _loginState.value = LoginUIState.Success
+                    }
+                    is LoginResult.InvalidCredentials -> {
+                        _loginState.value = LoginUIState.Error(R.string.invalid_credentials)
+                    }
                 }
-                is LoginResult.InvalidCredentials -> {
-                    _loginState.value = LoginUIState.Error(R.string.invalid_credentials)
-                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Login failed: ${e.message}")
+                _loginState.value = LoginUIState.Error(R.string.invalid_credentials)
             }
         }
     }

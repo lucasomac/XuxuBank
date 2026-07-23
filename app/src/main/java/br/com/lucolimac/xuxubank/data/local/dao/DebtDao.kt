@@ -10,6 +10,9 @@ interface DebtDao {
     @Query("SELECT * FROM debts")
     fun getAllDebts(): Flow<List<DebtEntity>>
 
+    @Query("SELECT * FROM debts")
+    suspend fun getAllDebtsList(): List<DebtEntity>
+
     @Query("SELECT * FROM debts WHERE clientId = :clientId")
     fun getDebtsByClient(clientId: String): Flow<List<DebtEntity>>
 

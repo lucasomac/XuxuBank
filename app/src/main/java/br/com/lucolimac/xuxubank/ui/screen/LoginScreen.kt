@@ -30,6 +30,11 @@ fun LoginScreen(
 ) {
     var identifier by remember { mutableStateOf("") }
     val isEmail = identifier.contains("@")
+    val containsLetters = identifier.any { it.isLetter() }
+    
+    // Only apply phone mask if the input looks like a phone (all digits and no @)
+    val shouldApplyPhoneMask = !isEmail && !containsLetters && identifier.isNotEmpty()
+    
     val isValid = if (isEmail) ValidationUtils.isValidEmail(identifier) else ValidationUtils.isValidPhone(identifier)
     
     val loginScreenA11y = stringResource(R.string.login_screen_a11y)
@@ -78,9 +83,9 @@ fun LoginScreen(
                     Text(text = stringResource(R.string.phone_mask_hint))
                 }
             },
-            visualTransformation = if (isEmail) androidx.compose.ui.text.input.VisualTransformation.None else PhoneVisualTransformation(),
+            visualTransformation = if (shouldApplyPhoneMask) PhoneVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
             keyboardOptions = KeyboardOptions(
-                keyboardType = if (identifier.any { it.isLetter() }) KeyboardType.Email else KeyboardType.Number
+                keyboardType = if (containsLetters || isEmail) KeyboardType.Email else KeyboardType.Number
             ),
             shape = MaterialTheme.shapes.medium
         )

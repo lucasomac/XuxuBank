@@ -4,11 +4,10 @@ Implementamos uma arquitetura robusta que combina o poder do **Room** (local) co
 
 ## Alterações Realizadas
 
-### Camada de Dados - Sincronização Híbrida
-- **Repositórios Híbridos:** Recriamos os repositórios (`ClientRepositoryImpl`, `DebtRepositoryImpl`, `UserRepositoryImpl`) para coordenar o banco local e a nuvem.
-- **Single Source of Truth:** A UI agora consome dados exclusivamente do **Room**. Isso garante que qualquer mudança seja refletida instantaneamente, mesmo offline.
-- **Snapshot Listeners:** Implementamos ouvintes em tempo real no Firestore. Se um dado mudar na nuvem, o Room é atualizado automaticamente e a UI reflete a mudança.
-- **Batch Operations:** Os DAOs foram atualizados para suportar inserções em lote (`insertClients`, `insertDebts`), otimizando a sincronização inicial.
+### Camada de Dados - Sincronização Retroativa
+- **Upload Local -> Cloud:** Implementamos uma rotina de sincronização na inicialização dos repositórios. Agora, o app verifica o banco local (**Room**) e garante que todos os registros existentes sejam enviados para o **Firestore**.
+- **Idempotência:** Utilizamos o método `set()` do Firestore, o que garante que dados que já estão na nuvem não sejam duplicados, apenas atualizados se necessário.
+- **Resiliência:** Essa rotina é protegida por blocos `try-catch`, garantindo que o app continue funcionando mesmo se houver instabilidade durante o upload inicial.
 
 ### Fluxo de Trabalho
 1. **Salvar:** O dado é enviado para o Firestore e, ao receber o ID de sucesso, é persistido no Room.

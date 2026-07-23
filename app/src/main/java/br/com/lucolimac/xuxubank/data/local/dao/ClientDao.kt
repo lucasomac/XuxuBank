@@ -9,6 +9,9 @@ interface ClientDao {
     @Query("SELECT * FROM clients")
     fun getAllClients(): Flow<List<ClientEntity>>
 
+    @Query("SELECT * FROM clients")
+    suspend fun getAllClientsList(): List<ClientEntity>
+
     @Query("SELECT * FROM clients WHERE id = :id")
     suspend fun getClientById(id: String): ClientEntity?
 
